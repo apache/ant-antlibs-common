@@ -92,4 +92,8 @@
 
     <fail if="tests.failed">At least one test has failed.</fail>
   </target>
+
+  <target name="clean">
+    <delete dir="${build}"/>
+  </target>
 </project>
