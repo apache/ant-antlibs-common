@@ -16,12 +16,15 @@
 -->
 <project name="common">
 
-  <target name="setup">
+  <target name="setup-properties">
     <property name="build" value="build"/>
     <property name="build.classes" value="${build}/classes"/>
     <property name="build.testclasses" value="${build}/test-classes"/>
     <property name="build.lib" value="${build}/lib"/>
     <property name="jarname" value="${build.lib}/ant-${ant.project.name}.jar"/>
+  </target>
+
+  <target name="setup" depends="setup-properties">
     <mkdir dir="${build.classes}"/>
     <mkdir dir="${build.testclasses}"/>
     <mkdir dir="${build.lib}"/>
@@ -93,7 +96,7 @@
     <fail if="tests.failed">At least one test has failed.</fail>
   </target>
 
-  <target name="clean">
+  <target name="clean" depends="setup-properties">
     <delete dir="${build}"/>
   </target>
 </project>
