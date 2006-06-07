@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
- Copyright  2005 The Apache Software Foundation
+ Copyright 2005-2006 The Apache Software Foundation
  
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 <project name="common">
 
   <target name="setup-properties">
+    <property file="build.properties"/>
     <property name="build" value="build"/>
     <property name="build.classes" value="${build}/classes"/>
     <property name="build.testclasses" value="${build}/test-classes"/>
