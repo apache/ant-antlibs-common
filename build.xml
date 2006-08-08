@@ -21,11 +21,24 @@
 
   <target name="setup-properties">
     <property file="build.properties"/>
+    <!--load in an optional file containing versions of things-->
+    <property file="libraries.properties"/>
+    
+    <!--load in a non-optional file containing versions of ant
+      and derivative libraries-->
+    <loadfile srcFile="${ant.home}/lib/libraries.properties"/>
+
     <property name="build" value="build"/>
     <property name="build.classes" value="${build}/classes"/>
     <property name="build.testclasses" value="${build}/test-classes"/>
     <property name="build.lib" value="${build}/lib"/>
-    <property name="jarname" value="${build.lib}/ant-${ant.project.name}.jar"/>
+    
+    <!--you really need a proper version in libraries.properties-->
+    <property name="artifact.version" value="0.1-SNAPSHOT"/>
+    <property name="artifact.name" value="ant-${ant.project.name}"/>
+    <property name="artifact.stub" value="${artifact.name}-${artifact.version}"/>
+    <property name="jarname" value="${build.lib}/${artifact.stub}.jar"/>
+    <property name="target.jar" value="${jarname}"/>
   </target>
 
   <target name="setup" depends="setup-properties">
@@ -33,6 +46,15 @@
     <mkdir dir="${build.testclasses}"/>
     <mkdir dir="${build.lib}"/>
   </target>
+
+  <!--Milestones to extend or override-->
+  <target name="ready-to-compile" depends="setup"/>
+  <target name="ready-to-test" depends="compile-tests"/>
+  <target name="ready-to-package" depends="compile"/>
+  <target name="package" depends="checksum-target-jar"
+       description="Package everything up"/>
+  <target name="dist" depends="package,m2-pom"
+       description="Make a complete distribution"/>
 
   <target name="compile" depends="setup">
     <javac 
@@ -52,7 +74,7 @@
 
   <target name="antlib" depends="compile, check-for-NOTICE">
     <copy todir="${build.classes}">
-      <fileset dir="src/main" includes="**/antlib.xml"/>
+      <fileset dir="src/main" includes="**/*.xml,**/*.properties"/>
     </copy>
     <jar destfile="${jarname}">
       <fileset dir="${build.classes}"/>
@@ -60,6 +82,13 @@
       <metainf file="common/LICENSE"/>
     </jar>
   </target>
+
+  <target name="checksum-target-jar"
+          description="checksum our jar" depends="antlib">
+    <checksum file="${target.jar}" algorithm="md5"/>
+    <checksum file="${target.jar}" algorithm="sha1"/>
+  </target>
+  
 
   <target name="setup-for-tests" depends="setup">
     <available classname="org.apache.tools.ant.BuildFileTest"
@@ -82,9 +111,12 @@
         <pathelement location="${ant-testutil.jar}"/>
       </classpath>
     </javac>
+    <copy todir="${build.testclasses}">
+      <fileset dir="src/testcases" includes="**/*.xml,**/*.properties"/>
+    </copy>
   </target>
 
-  <target name="test" depends="compile-tests">
+  <target name="test" depends="ready-to-test">
     <junit
       printsummary="false"
       haltonfailure="false"
@@ -112,4 +144,64 @@
   <target name="clean" depends="setup-properties">
     <delete dir="${build}"/>
   </target>
+
+  <!--copy the target to the destination. Only allowed if the tests pass!-->
+
+  <target name="install" depends="test">
+    <copy file="${jarname}" todir="${ant.home}/lib"/>
+  </target>  
+
+  <!-- ========================================================== -->
+  <!-- init all the maven2 support   -->
+  <!-- ========================================================== -->
+  <target name="m2-init"
+          depends="setup">
+    <property name="m2.groupID" value="org.apache.ant"/>
+    <property name="m2.groupID.path" value="org/apache/ant"/>
+    <property name="target.pom"
+              location="${build.lib}/${jarfile.stub}.pom"/>
+    <!--look for a template pom -->
+    <property name="project.pom" location="project-template.pom"/>
+    <available property="project.haspom?" file="${project.pom}"/>
+  </target>
+
+  
+  <!-- ========================================================== -->
+  <!-- POM creation/copy, depending on whether it exists or not   -->
+  <!-- ========================================================== -->
+
+  <!--copy an existing templte-->
+  <target name="m2-copy-pom" depends="m2-init" if="project.haspom?">
+    <copy file="${project.pom}" tofile="${target.pom}">
+      <!-- we expand ant properties here.  -->
+      <filterchain>
+        <expandproperties/>
+      </filterchain>
+    </copy>
+  </target>
+
+
+  <!-- inline creation of a zero dependency pom.
+    We don't even declare a dependency on ant!
+  -->
+  <target name="m2-make-pom" depends="m2-init" unless="project.haspom?">
+    <echo message="Creating Pom ${target.pom}" level="verbose"/>
+    <echoxml file="${target.pom}">
+      <project>
+        <modelVersion>4.0.0</modelVersion>
+        <groupId>${m2.groupID}</groupId>
+        <artifactId>${artifact.name}</artifactId>
+        <packaging>jar</packaging>
+        <version>${artifact-version}</version>
+        <dependencies/>
+      </project>
+    </echoxml>
+    <checksum file="${target.pom}" algorithm="md5"/>
+    <checksum file="${target.pom}" algorithm="sha1"/>
+  </target>
+
+  <target name="m2-pom" depends="m2-copy-pom,m2-make-pom"/>
+
+  
+  
 </project>
