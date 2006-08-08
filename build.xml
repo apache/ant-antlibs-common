@@ -26,7 +26,7 @@
     
     <!--load in a non-optional file containing versions of ant
       and derivative libraries-->
-    <loadfile srcFile="${ant.home}/lib/libraries.properties"/>
+    <loadproperties srcFile="${ant.home}/lib/libraries.properties"/>
 
     <property name="build" value="build"/>
     <property name="build.classes" value="${build}/classes"/>
@@ -124,6 +124,7 @@
       filtertrace="false"
       fork="true"
       forkmode="once"
+      includeantruntime="true"
       >
       <classpath>
         <pathelement location="${jarname}"/>
@@ -159,7 +160,7 @@
     <property name="m2.groupID" value="org.apache.ant"/>
     <property name="m2.groupID.path" value="org/apache/ant"/>
     <property name="target.pom"
-              location="${build.lib}/${jarfile.stub}.pom"/>
+              location="${build.lib}/${artifact.stub}.pom"/>
     <!--look for a template pom -->
     <property name="project.pom" location="project-template.pom"/>
     <available property="project.haspom?" file="${project.pom}"/>
@@ -192,7 +193,7 @@
         <groupId>${m2.groupID}</groupId>
         <artifactId>${artifact.name}</artifactId>
         <packaging>jar</packaging>
-        <version>${artifact-version}</version>
+        <version>${artifact.version}</version>
         <dependencies/>
       </project>
     </echoxml>
