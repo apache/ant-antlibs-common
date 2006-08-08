@@ -24,9 +24,9 @@
     <!--load in an optional file containing versions of things-->
     <property file="libraries.properties"/>
     
-    <!--load in a non-optional file containing versions of ant
-      and derivative libraries-->
-    <loadproperties srcFile="${ant.home}/lib/libraries.properties"/>
+    <!--load in a file containing versions of ant
+      and other libraries-->
+    <property file="${ant.home}/lib/libraries.properties"/>
 
     <property name="build" value="build"/>
     <property name="build.classes" value="${build}/classes"/>
