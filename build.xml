@@ -32,6 +32,7 @@
     <property name="build.classes" value="${build}/classes"/>
     <property name="build.testclasses" value="${build}/test-classes"/>
     <property name="build.lib" value="${build}/lib"/>
+    <property name="src.junit" location="src/tests/junit"/>
     
     <!--you really need a proper version in libraries.properties-->
     <property name="artifact.version" value="0.1-SNAPSHOT"/>
@@ -90,7 +91,7 @@
   </target>
   
 
-  <target name="setup-for-tests" depends="setup">
+  <target name="setup-for-junit-tests" depends="setup" unless="skip-junit">
     <available classname="org.apache.tools.ant.BuildFileTest"
       property="testutil-present?"
       classpath="${ant-testutil.jar}"/>
@@ -100,9 +101,10 @@
     to the correct location.</fail>
   </target>
 
-  <target name="compile-tests" depends="setup-for-tests, antlib">
+  <target name="compile-tests" depends="setup-for-junit-tests, antlib"
+    unless="skip-junit">
     <javac 
-      srcdir="src/testcases"
+      srcdir="${src.junit}"
       destdir="${build.testclasses}"
       debug="true"
       >
@@ -112,15 +114,15 @@
       </classpath>
     </javac>
     <copy todir="${build.testclasses}">
-      <fileset dir="src/testcases" includes="**/*.xml,**/*.properties"/>
+      <fileset dir="${src.junit}" includes="**/*.xml,**/*.properties"/>
     </copy>
   </target>
 
-  <target name="test" depends="ready-to-test">
+  <target name="junit-test" depends="ready-to-test" unless="skip-junit">
     <junit
       printsummary="false"
       haltonfailure="false"
-      failureproperty="tests.failed"
+      failureproperty="junit.tests.failed"
       filtertrace="false"
       fork="true"
       forkmode="once"
@@ -133,13 +135,15 @@
       </classpath>
 
       <batchtest>
-        <fileset dir="src/testcases"/>
+        <fileset dir="${src.junit}"/>
       </batchtest>
 
       <formatter type="plain" usefile="false"/>
     </junit>
+  </target>
 
-    <fail if="tests.failed">At least one test has failed.</fail>
+  <target name="test" depends="junit-test">
+    <fail if="junit.tests.failed">At least one test has failed.</fail>
   </target>
 
   <target name="clean" depends="setup-properties">
