@@ -168,14 +168,14 @@
 
   <target name="antunit-test" depends="ready-to-test-with-antunit"
     unless="skip-antunit">
-    <antunit xmlns="antlib:org.apache.ant.antunit"
-      failureOnError="false"
+    <au:antunit xmlns:au="antlib:org.apache.ant.antunit"
+      failOnError="false"
       errorProperty="antunit.tests.failed"
       >
-      <fileset dir="${src.antunit}"/>
+      <fileset dir="${src.antunit}" includes="*.xml"/>
 
-      <plainlistener/>
-    </antunit>
+      <au:plainlistener/>
+    </au:antunit>
   </target>
 
   <target name="test" depends="junit-test, antunit-test">
