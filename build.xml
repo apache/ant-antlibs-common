@@ -33,6 +33,7 @@
     <property name="build.testclasses" value="${build}/test-classes"/>
     <property name="build.lib" value="${build}/lib"/>
     <property name="src.junit" location="src/tests/junit"/>
+    <property name="src.antunit" location="src/tests/antunit"/>
     
     <!--you really need a proper version in libraries.properties-->
     <property name="artifact.version" value="0.1-SNAPSHOT"/>
@@ -50,7 +51,8 @@
 
   <!--Milestones to extend or override-->
   <target name="ready-to-compile" depends="setup"/>
-  <target name="ready-to-test" depends="compile-tests"/>
+  <target name="ready-to-test-with-junit" depends="compile-tests"/>
+  <target name="ready-to-test-with-antunit" depends="setup-for-antunit-tests"/>
   <target name="ready-to-package" depends="compile"/>
   <target name="package" depends="checksum-target-jar"
        description="Package everything up"/>
@@ -90,8 +92,21 @@
     <checksum file="${target.jar}" algorithm="sha1"/>
   </target>
   
+  <target name="determine-test-types">
+    <condition property="skip-junit">
+      <not>
+        <available file="${src.junit}"/>
+      </not>
+    </condition>
+    <condition property="skip-antunit">
+      <not>
+        <available file="${src.antunit}"/>
+      </not>
+    </condition>
+  </target>
 
-  <target name="setup-for-junit-tests" depends="setup" unless="skip-junit">
+  <target name="setup-for-junit-tests" depends="setup,determine-test-types"
+    unless="skip-junit">
     <available classname="org.apache.tools.ant.BuildFileTest"
       property="testutil-present?"
       classpath="${ant-testutil.jar}"/>
@@ -99,6 +114,14 @@
     <fail unless="testutil-present?">Expected to find ant-testutil.jar
     in ${ant-testutil.jar}, please set the property ant-testutil.jar
     to the correct location.</fail>
+  </target>
+
+  <target name="setup-for-antunit-tests" depends="setup,determine-test-types"
+    unless="skip-antunit">
+    <available classname="org.apache.ant.antunit.AntUnit"
+      property="antunit-present?"/>
+
+    <fail unless="antunit-present?">The AntUnit Ant library is not present.</fail>
   </target>
 
   <target name="compile-tests" depends="setup-for-junit-tests, antlib"
@@ -118,7 +141,8 @@
     </copy>
   </target>
 
-  <target name="junit-test" depends="ready-to-test" unless="skip-junit">
+  <target name="junit-test" depends="ready-to-test-with-junit"
+    unless="skip-junit">
     <junit
       printsummary="false"
       haltonfailure="false"
@@ -142,8 +166,21 @@
     </junit>
   </target>
 
-  <target name="test" depends="junit-test">
-    <fail if="junit.tests.failed">At least one test has failed.</fail>
+  <target name="antunit-test" depends="ready-to-test-with-antunit"
+    unless="skip-antunit">
+    <antunit xmlns="antlib:org.apache.ant.antunit"
+      failureOnError="false"
+      errorProperty="antunit.tests.failed"
+      >
+      <fileset dir="${src.antunit}"/>
+
+      <plainlistener/>
+    </antunit>
+  </target>
+
+  <target name="test" depends="junit-test, antunit-test">
+    <fail if="junit.tests.failed">At least one JUnit test has failed.</fail>
+    <fail if="antunit.tests.failed">At least one AntUnit test has failed.</fail>
   </target>
 
   <target name="clean" depends="setup-properties">
