@@ -47,6 +47,7 @@
     <mkdir dir="${build.classes}"/>
     <mkdir dir="${build.testclasses}"/>
     <mkdir dir="${build.lib}"/>
+    <copy file="common/style.css" todir="docs"/>
   </target>
 
   <!--Milestones to extend or override-->
