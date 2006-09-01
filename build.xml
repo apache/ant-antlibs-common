@@ -273,6 +273,7 @@
         <include name="TODO"/>
         <include name="WHATSNEW"/>
         <include name="contributors.xml"/>
+        <include name="build.xml"/>
       </fileset>
       <fileset dir="common">
         <include name="LICENSE"/>
@@ -288,11 +289,13 @@
     <fixcrlf srcdir="${src.dist.dir}">
       <include name="**/*.java"/>
     </fixcrlf>
+
+    <xslt style="common/contributors.xsl" in="contributors.xml"
+      out="${src.dist.dir}/CONTRIBUTORS"/>
   </target>
 
   <target name="bin-dist" depends="checksum-target-jar,m2-pom">
     <mkdir dir="${bin.dist.dir}"/>
-    <mkdir dir="${bin.dist.dir}/etc"/>
 
     <copy todir="${bin.dist.dir}">
       <fileset dir=".">
@@ -310,9 +313,14 @@
       <fileset file="${jarname}*"/>
       <fileset file="${target.pom}"/>
     </copy>
-    <copy todir="${bin.dist.dir}/etc">
-      <fileset dir="src/etc" excludes="testcases/"/>
+    <copy todir="${bin.dist.dir}/" includeemptydirs="false">
+      <fileset dir="src">
+        <include name="etc/"/>
+        <exclude name="etc/testcases/"/>
+      </fileset>
     </copy>
+    <xslt style="common/contributors.xsl" in="contributors.xml"
+      out="${bin.dist.dir}/CONTRIBUTORS"/>
   </target>
 
   <target name="distribution" description="creates a complete distribution"
