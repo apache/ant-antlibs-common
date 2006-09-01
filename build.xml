@@ -28,6 +28,7 @@
       and other libraries-->
     <property file="${ant.home}/lib/libraries.properties"/>
 
+    <!-- properties for build and test -->
     <property name="build" value="build"/>
     <property name="build.classes" value="${build}/classes"/>
     <property name="build.testclasses" value="${build}/test-classes"/>
@@ -41,6 +42,15 @@
     <property name="artifact.stub" value="${artifact.name}-${artifact.version}"/>
     <property name="jarname" value="${build.lib}/${artifact.stub}.jar"/>
     <property name="target.jar" value="${jarname}"/>
+
+    <!-- properties for distribution target -->
+    <property name="dist.name"
+      value="apache-${artifact.name}-${artifact.version}"/>
+    <property name="dist.base" value="distribution"/>
+    <property name="dist.base.source" value="${dist.base}/source"/>
+    <property name="dist.base.binaries" value="${dist.base}/binaries"/>
+    <property name="bin.dist.dir" value="dist-bin"/>
+    <property name="src.dist.dir" value="dist-src"/>
   </target>
 
   <target name="setup" depends="setup-properties">
@@ -55,10 +65,9 @@
   <target name="ready-to-test-with-junit" depends="compile-tests"/>
   <target name="ready-to-test-with-antunit" depends="setup-for-antunit-tests"/>
   <target name="ready-to-package" depends="compile"/>
+  <target name="ready-to-distribute" depends="antlib"/>
   <target name="package" depends="checksum-target-jar"
        description="Package everything up"/>
-  <target name="dist" depends="package,m2-pom"
-       description="Make a complete distribution"/>
 
   <target name="compile" depends="setup">
     <javac 
@@ -186,6 +195,10 @@
 
   <target name="clean" depends="setup-properties">
     <delete dir="${build}"/>
+    <delete dir="${dist.base.dir}"/>
+    <delete dir="${dist.name}"/>
+    <delete dir="${bin.dist.dir}"/>
+    <delete dir="${src.dist.dir}"/>
   </target>
 
   <!--copy the target to the destination. Only allowed if the tests pass!-->
@@ -245,6 +258,169 @@
 
   <target name="m2-pom" depends="m2-copy-pom,m2-make-pom"/>
 
-  
-  
+  <target name="src-dist" depends="m2-pom"
+    description="--> creates a source distribution">
+
+    <mkdir dir="${src.dist.dir}"/>
+    <copy todir="${src.dist.dir}">
+      <fileset dir=".">
+        <include name="src/"/>
+        <include name="common/"/>
+        <include name="docs/"/>
+        <include name="README"/>
+        <include name="INSTALL"/>
+        <include name="NOTICE"/>
+        <include name="TODO"/>
+        <include name="WHATSNEW"/>
+        <include name="contributors.xml"/>
+      </fileset>
+      <fileset dir="common">
+        <include name="LICENSE"/>
+      </fileset>
+      <fileset file="${target.pom}"/>
+    </copy>
+
+    <fixcrlf srcdir="${src.dist.dir}" eol="dos" includes="*.bat,*.cmd"/>
+    <fixcrlf srcdir="${src.dist.dir}" eol="unix">
+      <include name="**/*.sh"/>
+      <include name="**/*.pl"/>
+    </fixcrlf>
+    <fixcrlf srcdir="${src.dist.dir}">
+      <include name="**/*.java"/>
+    </fixcrlf>
+  </target>
+
+  <target name="bin-dist" depends="checksum-target-jar,m2-pom">
+    <mkdir dir="${bin.dist.dir}"/>
+    <mkdir dir="${bin.dist.dir}/etc"/>
+
+    <copy todir="${bin.dist.dir}">
+      <fileset dir=".">
+        <include name="docs/"/>
+        <include name="README"/>
+        <include name="INSTALL"/>
+        <include name="NOTICE"/>
+        <include name="TODO"/>
+        <include name="WHATSNEW"/>
+        <include name="contributors.xml"/>
+      </fileset>
+      <fileset dir="common">
+        <include name="LICENSE"/>
+      </fileset>
+      <fileset file="${jarname}*"/>
+      <fileset file="${target.pom}"/>
+    </copy>
+    <copy todir="${bin.dist.dir}/etc">
+      <fileset dir="src/etc" excludes="testcases/"/>
+    </copy>
+  </target>
+
+  <target name="distribution" description="creates a complete distribution"
+    depends="ready-to-distribute">
+
+    <mkdir dir="${dist.base.binaries}"/>
+    <mkdir dir="${dist.base.source}"/>
+
+    <!--delete dir="${java-repository.dir}"/-->
+    <!--mkdir dir="${java-repository.dir}"/-->
+
+    <delete dir="${dist.name}"/>
+    <antcall target="bin-dist" inheritall="false">
+      <param name="bin.dist.dir" value="${dist.name}"/>
+    </antcall>
+
+    <zip destfile="${dist.base.binaries}/${dist.name}-bin.zip">
+      <zipfileset dir="${dist.name}/.." filemode="755">
+        <include name="${dist.name}/bin/*.pl"/>
+        <include name="${dist.name}/bin/*.py"/>
+      </zipfileset>
+      <fileset dir="${dist.name}/..">
+        <include name="${dist.name}/**"/>
+        <exclude name="${dist.name}/bin/*.pl"/>
+        <exclude name="${dist.name}/bin/*.py"/>
+      </fileset>
+    </zip>
+    <tar longfile="gnu"
+      destfile="${dist.base.binaries}/${dist.name}-bin.tar">
+      <tarfileset dir="${dist.name}/.." mode="755" username="ant" group="ant">
+        <include name="${dist.name}/bin/*.pl"/>
+        <include name="${dist.name}/bin/*.py"/>
+      </tarfileset>
+      <tarfileset dir="${dist.name}/.." username="ant" group="ant">
+        <include name="${dist.name}/**"/>
+        <exclude name="${dist.name}/bin/*.pl"/>
+        <exclude name="${dist.name}/bin/*.py"/>
+      </tarfileset>
+    </tar>
+    <gzip destfile="${dist.base.binaries}/${dist.name}-bin.tar.gz"
+      src="${dist.base.binaries}/${dist.name}-bin.tar"/>
+    <bzip2 destfile="${dist.base.binaries}/${dist.name}-bin.tar.bz2"
+      src="${dist.base.binaries}/${dist.name}-bin.tar"/>
+    <delete file="${dist.base.binaries}/${dist.name}-bin.tar"/>
+
+    <!--copy todir="${java-repository.dir}">
+      <fileset dir="${dist.name}/lib">
+        <include name="ant*.jar"/>
+      </fileset>
+      <mapper type="glob" from="*.jar" to="*-${version}.jar"/>
+    </copy>
+    <checksum fileext=".md5">
+      <fileset dir="${java-repository.dir}" includes="*${version}.jar"/>
+    </checksum>
+    <checksum fileext=".sha1" algorithm="SHA">
+      <fileset dir="${java-repository.dir}" includes="*${version}.jar"/>
+    </checksum-->
+
+    <checksum fileext=".md5">
+      <fileset dir="${dist.base.binaries}/">
+        <include name="**/*"/>
+        <exclude name="**/*.asc"/>
+        <exclude name="**/*.md5"/>
+      </fileset>
+    </checksum>
+    <checksum fileext=".sha1" algorithm="SHA">
+      <fileset dir="${dist.base.binaries}/">
+        <include name="**/*"/>
+        <exclude name="**/*.asc"/>
+        <exclude name="**/*.md5"/>
+      </fileset>
+    </checksum>
+
+    <delete dir="${dist.name}"/>
+    <antcall target="src-dist" inheritall="false">
+      <param name="src.dist.dir" value="${dist.name}"/>
+    </antcall>
+
+    <zip destfile="${dist.base.source}/${dist.name}-src.zip">
+      <fileset dir="${dist.name}/..">
+        <include name="${dist.name}/**"/>
+      </fileset>
+    </zip>
+    <tar longfile="gnu"
+      destfile="${dist.base.source}/${dist.name}-src.tar">
+      <tarfileset dir="${dist.name}/.." username="ant" group="ant">
+        <include name="${dist.name}/**"/>
+      </tarfileset>
+    </tar>
+    <gzip destfile="${dist.base.source}/${dist.name}-src.tar.gz"
+      src="${dist.base.source}/${dist.name}-src.tar"/>
+    <bzip2 destfile="${dist.base.source}/${dist.name}-src.tar.bz2"
+      src="${dist.base.source}/${dist.name}-src.tar"/>
+    <delete file="${dist.base.source}/${dist.name}-src.tar"/>
+    <delete dir="${dist.name}"/>
+    <checksum fileext=".md5">
+      <fileset dir="${dist.base.source}/">
+        <include name="**/*"/>
+        <exclude name="**/*.asc"/>
+        <exclude name="**/*.md5"/>
+      </fileset>
+    </checksum>
+    <checksum fileext=".sha1" algorithm="SHA">
+      <fileset dir="${dist.base.source}/">
+        <include name="**/*"/>
+        <exclude name="**/*.asc"/>
+        <exclude name="**/*.md5"/>
+      </fileset>
+    </checksum>
+  </target>
 </project>
