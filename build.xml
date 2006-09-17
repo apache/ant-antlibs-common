@@ -22,7 +22,7 @@
   <target name="setup-properties">
     <property file="build.properties"/>
     <!--load in an optional file containing versions of things-->
-    <property file="libraries.properties"/>
+    <property file="version.properties"/>
     
     <!--load in a file containing versions of ant
       and other libraries-->
@@ -36,7 +36,7 @@
     <property name="src.junit" location="src/tests/junit"/>
     <property name="src.antunit" location="src/tests/antunit"/>
     
-    <!--you really need a proper version in libraries.properties-->
+    <!--you really need a proper version in version.properties-->
     <property name="artifact.version" value="0.1-SNAPSHOT"/>
     <property name="artifact.name" value="ant-${ant.project.name}"/>
     <property name="artifact.stub" value="${artifact.name}-${artifact.version}"/>
@@ -274,6 +274,7 @@
         <include name="WHATSNEW"/>
         <include name="contributors.xml"/>
         <include name="build.xml"/>
+        <include name="version.properties"/>
       </fileset>
       <fileset dir="common">
         <include name="LICENSE"/>
