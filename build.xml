@@ -119,6 +119,7 @@
     unless="skip-junit">
     <available classname="org.apache.tools.ant.BuildFileTest"
       property="testutil-present?"
+      ignoresystemclasses="true"
       classpath="${ant-testutil.jar}"/>
 
     <fail unless="testutil-present?">Expected to find ant-testutil.jar
