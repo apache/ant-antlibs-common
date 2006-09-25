@@ -180,8 +180,8 @@
   <target name="antunit-test" depends="ready-to-test-with-antunit"
     unless="skip-antunit">
     <condition property="antunit.includes" value="${antunit.testcase}"
-               else="**/*-test.xml">
-      <isset property="${antunit.testcase}" />
+               else="**/test.xml,**/*-test.xml">
+      <isset property="antunit.testcase" />
     </condition>
 
     <property name="antunit.excludes" value="" />
