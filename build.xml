@@ -51,6 +51,10 @@
     <property name="dist.base.binaries" value="${dist.base}/binaries"/>
     <property name="bin.dist.dir" value="dist-bin"/>
     <property name="src.dist.dir" value="dist-src"/>
+
+    <!-- junit test properties -->
+    <property name="junit.fork" value="true" />
+    <property name="junit.forkmode" value="once" />
   </target>
 
   <target name="setup" depends="setup-properties">
@@ -159,8 +163,8 @@
       haltonfailure="false"
       failureproperty="junit.tests.failed"
       filtertrace="false"
-      fork="true"
-      forkmode="once"
+      fork="${junit.fork}"
+      forkmode="${junit.forkmode}"
       includeantruntime="true"
       >
       <classpath>
