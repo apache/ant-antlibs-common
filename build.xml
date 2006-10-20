@@ -284,7 +284,7 @@
         <include name="INSTALL"/>
         <include name="NOTICE"/>
         <include name="TODO"/>
-        <include name="WHATSNEW"/>
+        <include name="changes.xml"/>
         <include name="contributors.xml"/>
         <include name="build.xml"/>
         <include name="version.properties"/>
@@ -304,8 +304,9 @@
       <include name="**/*.java"/>
     </fixcrlf>
 
-    <xslt style="common/contributors.xsl" in="contributors.xml"
-      out="${src.dist.dir}/CONTRIBUTORS"/>
+    <antcall target="create-readable-documents">
+      <param name="dest.dir" value="${src.dist.dir}"/>
+    </antcall>
   </target>
 
   <target name="bin-dist" depends="checksum-target-jar,m2-pom">
@@ -318,7 +319,7 @@
         <include name="INSTALL"/>
         <include name="NOTICE"/>
         <include name="TODO"/>
-        <include name="WHATSNEW"/>
+        <include name="changes.xml"/>
         <include name="contributors.xml"/>
       </fileset>
       <fileset dir="common">
@@ -333,8 +334,9 @@
         <exclude name="etc/testcases/"/>
       </fileset>
     </copy>
-    <xslt style="common/contributors.xsl" in="contributors.xml"
-      out="${bin.dist.dir}/CONTRIBUTORS"/>
+    <antcall target="create-readable-documents">
+      <param name="dest.dir" value="${bin.dist.dir}"/>
+    </antcall>
   </target>
 
   <target name="distribution" description="creates a complete distribution"
@@ -445,4 +447,31 @@
       </fileset>
     </checksum>
   </target>
+
+  <target name="check-contributors">
+    <available property="contributors.file.exists?"
+      file="contributors.xml"/>
+  </target>
+
+  <target name="check-changes">
+    <available property="changes.file.exists?"
+      file="changes.xml"/>
+  </target>
+
+  <target name="style-contributors" depends="check-contributors"
+    if="contributors.file.exists?">
+    <xslt style="common/stylesheets/contributors.xsl" in="contributors.xml"
+      out="${dest.dir}/CONTRIBUTORS"/>
+  </target>
+
+  <target name="style-changes" depends="check-changes"
+    if="changes.file.exists?">
+    <xslt style="common/stylesheets/changes2whatsnew.xsl" in="changes.xml"
+      out="${dest.dir}/WHATSNEW"/>
+    <xslt style="common/stylesheets/changes2readmehtml.xsl" in="changes.xml"
+      out="${dest.dir}/README.html"/>
+  </target>
+
+  <target name="create-readable-documents"
+    depends="style-contributors,style-changes"/>
 </project>
