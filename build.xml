@@ -84,7 +84,7 @@
       destdir="${build.classes}"
       debug="${javac.debug}"
       source="${javac.-source}"
-      source="${javac.-target}"
+      target="${javac.-target}"
       />
   </target>
 
@@ -153,7 +153,7 @@
       destdir="${build.testclasses}"
       debug="${javac.debug}"
       source="${javac.-source}"
-      source="${javac.-target}"
+      target="${javac.-target}"
       >
       <classpath>
         <pathelement location="${jarname}"/>
