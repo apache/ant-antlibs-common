@@ -20,6 +20,9 @@
 <project name="ivy">
   <description>Targets for ivy.xml creation/handling</description>
 
+  <dirname property="common.basedir" file="${ant.file.ivy}"/>
+  <import file="${common.basedir}/common-tasks.xml"/>
+
   <!-- ========================================================== -->
   <!-- init all the Ivy support   -->
   <!-- ========================================================== -->
@@ -44,12 +47,7 @@
 
   <!--copy an existing template-->
   <target name="copy-ivy.xml" depends="ivy-init" if="project.has-ivy.xml?">
-    <copy file="${project.ivy.xml}" tofile="${target.ivy.xml}">
-      <!-- we expand ant properties here.  -->
-      <filterchain>
-        <expandproperties/>
-      </filterchain>
-    </copy>
+    <expandingcopy file="${project.ivy.xml}" tofile="${target.ivy.xml}"/>
   </target>
 
 

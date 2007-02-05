@@ -20,6 +20,9 @@
 <project name="m2">
   <description>Targets for Maven2 POM creation/handling</description>
 
+  <dirname property="common.basedir" file="${ant.file.m2}"/>
+  <import file="${common.basedir}/common-tasks.xml"/>
+
   <!-- ========================================================== -->
   <!-- init all the maven2 support   -->
   <!-- ========================================================== -->
@@ -41,12 +44,7 @@
 
   <!--copy an existing template-->
   <target name="m2-copy-pom" depends="m2-init" if="project.haspom?">
-    <copy file="${project.pom}" tofile="${target.pom}">
-      <!-- we expand ant properties here.  -->
-      <filterchain>
-        <expandproperties/>
-      </filterchain>
-    </copy>
+    <expandingcopy file="${project.pom}" tofile="${target.pom}"/>
   </target>
 
 
