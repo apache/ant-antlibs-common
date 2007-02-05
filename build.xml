@@ -248,7 +248,7 @@
   <!-- POM creation/copy, depending on whether it exists or not   -->
   <!-- ========================================================== -->
 
-  <!--copy an existing templte-->
+  <!--copy an existing template-->
   <target name="m2-copy-pom" depends="m2-init" if="project.haspom?">
     <copy file="${project.pom}" tofile="${target.pom}">
       <!-- we expand ant properties here.  -->
@@ -274,11 +274,12 @@
         <dependencies/>
       </project>
     </echoxml>
+  </target>
+
+  <target name="m2-pom" depends="m2-copy-pom,m2-make-pom">
     <checksum file="${target.pom}" algorithm="md5"/>
     <checksum file="${target.pom}" algorithm="sha1"/>
   </target>
-
-  <target name="m2-pom" depends="m2-copy-pom,m2-make-pom"/>
 
   <target name="src-dist" depends="m2-pom"
     description="--> creates a source distribution">
