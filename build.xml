@@ -233,7 +233,7 @@
   <import file="${common.basedir}/m2.xml"/>
   <import file="${common.basedir}/ivy.xml"/>
 
-  <target name="src-dist" depends="m2-pom"
+  <target name="src-dist" depends="m2-pom,ivy.xml"
     description="--> creates a source distribution">
 
     <mkdir dir="${src.dist.dir}"/>
@@ -271,7 +271,7 @@
     </antcall>
   </target>
 
-  <target name="bin-dist" depends="checksum-target-jar,m2-pom">
+  <target name="bin-dist" depends="checksum-target-jar,m2-pom,ivy.xml">
     <mkdir dir="${bin.dist.dir}"/>
 
     <copy todir="${bin.dist.dir}">
