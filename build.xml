@@ -231,6 +231,7 @@
 
   <dirname property="common.basedir" file="${ant.file.common}"/>
   <import file="${common.basedir}/m2.xml"/>
+  <import file="${common.basedir}/ivy.xml"/>
 
   <target name="src-dist" depends="m2-pom"
     description="--> creates a source distribution">
