@@ -20,12 +20,10 @@
 <project name="common-tasks">
   <!-- copy that expands Ant properties -->
   <presetdef name="expandingcopy">
-    <sequential>
-      <copy>
-        <filterchain>
-          <expandproperties/>
-        </filterchain>
-      </copy>
-    </sequential>
+    <copy>
+      <filterchain>
+        <expandproperties/>
+      </filterchain>
+    </copy>
   </presetdef>
 </project>
