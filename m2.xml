@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+ 
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+<project name="m2">
+  <description>Targets for Maven2 POM creation/handling</description>
+
+  <!-- ========================================================== -->
+  <!-- init all the maven2 support   -->
+  <!-- ========================================================== -->
+  <target name="m2-init"
+          depends="setup">
+    <property name="m2.groupID" value="org.apache.ant"/>
+    <property name="m2.groupID.path" value="org/apache/ant"/>
+    <property name="target.pom"
+              location="${build.lib}/${artifact.stub}.pom"/>
+    <!--look for a template pom -->
+    <property name="project.pom" location="project-template.pom"/>
+    <available property="project.haspom?" file="${project.pom}"/>
+  </target>
+
+  
+  <!-- ========================================================== -->
+  <!-- POM creation/copy, depending on whether it exists or not   -->
+  <!-- ========================================================== -->
+
+  <!--copy an existing template-->
+  <target name="m2-copy-pom" depends="m2-init" if="project.haspom?">
+    <copy file="${project.pom}" tofile="${target.pom}">
+      <!-- we expand ant properties here.  -->
+      <filterchain>
+        <expandproperties/>
+      </filterchain>
+    </copy>
+  </target>
+
+
+  <!-- inline creation of a zero dependency pom.
+    We don't even declare a dependency on ant!
+  -->
+  <target name="m2-make-pom" depends="m2-init" unless="project.haspom?">
+    <echo message="Creating Pom ${target.pom}" level="verbose"/>
+    <echoxml file="${target.pom}">
+      <project>
+        <modelVersion>4.0.0</modelVersion>
+        <groupId>${m2.groupID}</groupId>
+        <artifactId>${artifact.name}</artifactId>
+        <packaging>jar</packaging>
+        <version>${artifact.version}</version>
+        <dependencies/>
+      </project>
+    </echoxml>
+  </target>
+
+  <target name="m2-pom" depends="m2-copy-pom,m2-make-pom">
+    <checksum file="${target.pom}" algorithm="md5"/>
+    <checksum file="${target.pom}" algorithm="sha1"/>
+  </target>
+
+</project>
