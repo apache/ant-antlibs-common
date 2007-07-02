@@ -217,7 +217,7 @@
 
   <target name="clean" depends="setup-properties">
     <delete dir="${build}"/>
-    <delete dir="${dist.base.dir}"/>
+    <delete dir="${dist.base}"/>
     <delete dir="${dist.name}"/>
     <delete dir="${bin.dist.dir}"/>
     <delete dir="${src.dist.dir}"/>
