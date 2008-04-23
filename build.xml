@@ -204,7 +204,7 @@
       <fileset dir="${src.antunit}" includes="${antunit.includes}"
                excludes="${antunit.excludes}" />
 
-      <au:plainlistener logLevel="debug"/>
+      <au:plainlistener/>
     </au:antunit>
   </target>
 
