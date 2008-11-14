@@ -126,6 +126,9 @@
 
   <target name="setup-for-junit-tests" depends="setup,determine-test-types"
     unless="skip-junit">
+    <available classname="junit.framework.TestCase" property="junit-present?"/>    
+    <fail unless="junit-present?">The JUnit library is not present.</fail>
+            
     <available classname="org.apache.tools.ant.BuildFileTest"
       property="testutil-present?"
       ignoresystemclasses="true"
