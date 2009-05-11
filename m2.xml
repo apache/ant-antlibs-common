@@ -66,8 +66,9 @@
   </target>
 
   <target name="m2-pom" depends="m2-copy-pom,m2-make-pom">
-    <checksum file="${target.pom}" algorithm="md5"/>
-    <checksum file="${target.pom}" algorithm="sha1"/>
+    <checksums>
+      <file file="${target.pom}"/>
+    </checksums>
   </target>
 
 </project>

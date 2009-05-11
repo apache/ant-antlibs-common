@@ -72,8 +72,9 @@
   </target>
 
   <target name="ivy.xml" depends="copy-ivy.xml,make-ivy.xml">
-    <checksum file="${target.ivy.xml}" algorithm="md5"/>
-    <checksum file="${target.ivy.xml}" algorithm="sha1"/>
+    <checksums>
+      <file file="${target.ivy.xml}"/>
+    </checksums>
   </target>
 
 </project>

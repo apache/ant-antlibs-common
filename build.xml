@@ -17,6 +17,9 @@
 -->
 <project name="common">
 
+  <dirname property="common.basedir" file="${ant.file.common}"/>
+  <import file="${common.basedir}/common-tasks.xml"/>
+
   <target name="setup-properties">
     <property file="build.properties"/>
     <!--load in an optional file containing versions of things-->
@@ -109,8 +112,9 @@
 
   <target name="checksum-target-jar"
           description="checksum our jar" depends="antlib">
-    <checksum file="${target.jar}" algorithm="md5"/>
-    <checksum file="${target.jar}" algorithm="sha1"/>
+    <checksums>
+      <file file="${target.jar}"/>
+    </checksums>
   </target>
   
   <target name="determine-test-types">
@@ -232,7 +236,6 @@
     <copy file="${jarname}" todir="${ant.home}/lib"/>
   </target>  
 
-  <dirname property="common.basedir" file="${ant.file.common}"/>
   <import file="${common.basedir}/m2.xml"/>
   <import file="${common.basedir}/ivy.xml"/>
 
@@ -353,27 +356,19 @@
       </fileset>
       <mapper type="glob" from="*.jar" to="*-${version}.jar"/>
     </copy>
-    <checksum fileext=".md5">
+    <checksums>
       <fileset dir="${java-repository.dir}" includes="*${version}.jar"/>
-    </checksum>
-    <checksum fileext=".sha1" algorithm="SHA">
-      <fileset dir="${java-repository.dir}" includes="*${version}.jar"/>
-    </checksum-->
+    </checksums-->
 
-    <checksum fileext=".md5">
+    <checksums>
       <fileset dir="${dist.base.binaries}/">
         <include name="**/*"/>
         <exclude name="**/*.asc"/>
         <exclude name="**/*.md5"/>
+        <exclude name="**/*.sha1"/>
+        <exclude name="**/*.sha512"/>
       </fileset>
-    </checksum>
-    <checksum fileext=".sha1" algorithm="SHA">
-      <fileset dir="${dist.base.binaries}/">
-        <include name="**/*"/>
-        <exclude name="**/*.asc"/>
-        <exclude name="**/*.md5"/>
-      </fileset>
-    </checksum>
+    </checksums>
 
     <delete dir="${dist.name}"/>
     <antcall target="src-dist" inheritall="false">
@@ -397,20 +392,15 @@
       src="${dist.base.source}/${dist.name}-src.tar"/>
     <delete file="${dist.base.source}/${dist.name}-src.tar"/>
     <delete dir="${dist.name}"/>
-    <checksum fileext=".md5">
+    <checksums>
       <fileset dir="${dist.base.source}/">
         <include name="**/*"/>
         <exclude name="**/*.asc"/>
         <exclude name="**/*.md5"/>
+        <exclude name="**/*.sha1"/>
+        <exclude name="**/*.sha512"/>
       </fileset>
-    </checksum>
-    <checksum fileext=".sha1" algorithm="SHA">
-      <fileset dir="${dist.base.source}/">
-        <include name="**/*"/>
-        <exclude name="**/*.asc"/>
-        <exclude name="**/*.md5"/>
-      </fileset>
-    </checksum>
+    </checksums>
   </target>
 
   <target name="check-contributors">

@@ -26,4 +26,20 @@
       </filterchain>
     </copy>
   </presetdef>
+
+  <!-- create checksums -->
+  <macrodef name="checksums">
+    <element name="resources" implicit="true"/>
+    <sequential>
+      <checksum algorithm="md5">
+        <resources/>
+      </checksum>
+      <checksum algorithm="sha1">
+        <resources/>
+      </checksum>
+      <checksum fileext=".sha512" algorithm="sha-512">
+        <resources/>
+      </checksum>
+    </sequential>
+  </macrodef>
 </project>
