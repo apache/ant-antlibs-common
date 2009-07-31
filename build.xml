@@ -88,7 +88,7 @@
       debug="${javac.debug}"
       source="${javac.-source}"
       target="${javac.-target}"
-      includeantruntime="false"
+      includeantruntime="true"
       />
   </target>
 
