@@ -69,7 +69,7 @@
     <mkdir dir="${build.classes}"/>
     <mkdir dir="${build.testclasses}"/>
     <mkdir dir="${build.lib}"/>
-    <copy file="common/style.css" todir="docs"/>
+    <copy file="${common.basedir}/style.css" todir="docs"/>
   </target>
 
   <!--Milestones to extend or override-->
@@ -107,7 +107,7 @@
     <jar destfile="${jarname}">
       <fileset dir="${build.classes}"/>
       <metainf file="NOTICE"/>
-      <metainf file="common/LICENSE"/>
+      <metainf file="${common.basedir}/LICENSE"/>
     </jar>
   </target>
 
@@ -416,15 +416,15 @@
 
   <target name="style-contributors" depends="check-contributors"
     if="contributors.file.exists?">
-    <xslt style="common/stylesheets/contributors.xsl" in="contributors.xml"
+    <xslt style="${common.basedir}/stylesheets/contributors.xsl" in="contributors.xml"
       out="${dest.dir}/CONTRIBUTORS"/>
   </target>
 
   <target name="style-changes" depends="check-changes"
     if="changes.file.exists?">
-    <xslt style="common/stylesheets/changes2whatsnew.xsl" in="changes.xml"
+    <xslt style="${common.basedir}/stylesheets/changes2whatsnew.xsl" in="changes.xml"
       out="${dest.dir}/WHATSNEW"/>
-    <xslt style="common/stylesheets/changes2readmehtml.xsl" in="changes.xml"
+    <xslt style="${common.basedir}/stylesheets/changes2readmehtml.xsl" in="changes.xml"
       out="${dest.dir}/README.html"/>
   </target>
 
