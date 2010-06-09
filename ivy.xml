@@ -28,7 +28,7 @@
   <!-- ========================================================== -->
   <target name="ivy-init"
           depends="setup">
-    <property name="ivy.organization" value="apache"/>
+    <property name="ivy.organization" value="org/apache"/>
     <property name="target.ivy.xml"
               location="${build.lib}/${artifact.stub}-ivy.xml"/>
     <tstamp>
@@ -59,7 +59,7 @@
     <echoxml file="${target.ivy.xml}">
       <ivy-module version="1.3">
         <info organization="${ivy.organization}"
-          module="${artifact.name}"
+          module="ant"
           revision="${artifact.version}"
           publication="${publication.datetime}">
           <license name="Apache Software License 2.0"
@@ -67,6 +67,12 @@
           <ivy-author name="Apache Ant Development Team"
             url="http://ant.apache.org/"/>
         </info>
+        <publications>  
+          <artifact name="${artifact.name}" type="pom" ext="pom"/>
+          <artifact name="${artifact.name}" type="pom.asc" ext="pom.asc"/>
+          <artifact name="${artifact.name}" type="jar" ext="jar"/>
+          <artifact name="${artifact.name}" type="jar.asc" ext="jar.asc"/>
+        </publications>
       </ivy-module>
     </echoxml>
   </target>

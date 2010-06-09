@@ -34,6 +34,8 @@
     <property name="build.classes" value="${build}/classes"/>
     <property name="build.testclasses" value="${build}/test-classes"/>
     <property name="build.lib" value="${build}/lib"/>
+    <property name="build.javarepository"
+              value="${build}/java-repository"/>
     <property name="src.junit" location="src/tests/junit"/>
     <property name="src.antunit" location="src/tests/antunit"/>
     
@@ -430,4 +432,36 @@
 
   <target name="create-readable-documents"
     depends="style-contributors,style-changes"/>
+
+  <!-- uploading of releases -->
+  <import file="${common.basedir}/upload.xml"/>
+
+  <target name="prepare-upload" depends="bindist">
+    <property name="upload.dir"
+              value="${build.javarepository}/org/apache/ant/${artifact.name}/${artifact.version}"/>
+    <mkdir dir="${upload.dir}"/>
+    <copy file="${jarname}" todir="${upload.dir}"/>
+    <copy file="${target.pom}" todir="${upload.dir}"/>
+  </target>
+
+  <target name="check-sigs" depends="prepare-upload">
+    <uptodate property="jar.sig.ok"
+              srcfile="${upload.dir}/${artifact.stub}.jar"
+              targetfile="${upload.dir}/${artifact.stub}.jar.asc"/>
+    <uptodate property="pom.sig.ok"
+              srcfile="${upload.dir}/${artifact.stub}.pom"
+              targetfile="${upload.dir}/${artifact.stub}.pom.asc"/>
+    <fail message="Your OpenPGP signature of the artifacts is too old or missing">
+      <condition>
+        <not>
+          <and>
+            <isset property="jar.sig.ok"/>
+            <isset property="pom.sig.ok"/>
+          </and>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="upload" depends="check-sigs,perform-nexus-upload"/>
 </project>
