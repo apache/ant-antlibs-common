@@ -436,7 +436,7 @@
   <!-- uploading of releases -->
   <import file="${common.basedir}/upload.xml"/>
 
-  <target name="prepare-upload" depends="bindist">
+  <target name="prepare-upload" depends="bin-dist">
     <property name="upload.dir"
               value="${build.javarepository}/org/apache/ant/${artifact.name}/${artifact.version}"/>
     <mkdir dir="${upload.dir}"/>
