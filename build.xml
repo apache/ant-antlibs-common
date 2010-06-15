@@ -36,6 +36,7 @@
     <property name="build.lib" value="${build}/lib"/>
     <property name="build.javarepository"
               value="${build}/java-repository"/>
+    <property name="build.javadoc" value="${build}/javadoc"/>
     <property name="src.junit" location="src/tests/junit"/>
     <property name="src.antunit" location="src/tests/antunit"/>
     
@@ -233,6 +234,30 @@
     <delete dir="${src.dist.dir}"/>
   </target>
 
+  <target name="javadoc_check">
+    <uptodate property="javadoc.notrequired"
+              targetfile="${build.javadoc}/package-list">
+      <srcfiles dir="src/main" includes="**/*.java,**/*.html"/>
+    </uptodate>
+  </target>
+
+  <target name="javadoc" depends="setup-properties, javadoc_check"
+          description="--> creates the API documentation"
+          unless="javadoc.notrequired">
+    <mkdir dir="${build.javadoc}"/>
+    <javadoc useexternalfile="yes"
+             maxmemory="1000M"	
+             destdir="${build.javadoc}"
+             version="true"
+             locale="en"
+             windowtitle="${artifact.name} API"
+             doctitle="${artifact.name}"
+             failonerror="true"
+             verbose="false">
+      <packageset dir="src/main"/>
+    </javadoc>
+  </target>
+
   <!--copy the target to the destination. Only allowed if the tests pass!-->
 
   <target name="install" depends="test">
@@ -280,7 +305,7 @@
     </antcall>
   </target>
 
-  <target name="bin-dist" depends="checksum-target-jar,m2-pom,ivy.xml">
+  <target name="bin-dist" depends="checksum-target-jar,m2-pom,ivy.xml,javadoc">
     <mkdir dir="${bin.dist.dir}"/>
 
     <copy todir="${bin.dist.dir}">
@@ -298,6 +323,9 @@
       </fileset>
       <fileset file="${jarname}*"/>
       <fileset file="${target.pom}"/>
+    </copy>
+    <copy todir="${bin.dist.dir}/javadoc">
+      <fileset dir="${build.javadoc}"/>
     </copy>
     <copy todir="${bin.dist.dir}/" includeemptydirs="false">
       <fileset dir="src">
@@ -444,6 +472,11 @@
     <copy file="${target.pom}" todir="${upload.dir}"/>
     <jar destfile="${upload.dir}/${artifact.stub}-sources.jar">
       <fileset dir="src/main"/>
+      <metainf file="NOTICE"/>
+      <metainf file="${common.basedir}/LICENSE"/>
+    </jar>
+    <jar destfile="${upload.dir}/${artifact.stub}-javadoc.jar">
+      <fileset dir="${build.javadoc}"/>
       <metainf file="NOTICE"/>
       <metainf file="${common.basedir}/LICENSE"/>
     </jar>
