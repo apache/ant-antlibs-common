@@ -72,6 +72,14 @@
           <artifact name="${artifact.name}" type="pom.asc" ext="pom.asc"/>
           <artifact name="${artifact.name}" type="jar" ext="jar"/>
           <artifact name="${artifact.name}" type="jar.asc" ext="jar.asc"/>
+          <artifact name="${artifact.name}" type="source" ext="jar"
+                    classifier="sources"/>
+          <artifact name="${artifact.name}" type="source.asc" ext="jar.asc"
+                    classifier="sources"/>
+          <artifact name="${artifact.name}" type="javadoc" ext="jar"
+                    classifier="javadoc"/>
+          <artifact name="${artifact.name}" type="javadoc.asc" ext="jar.asc"
+                    classifier="javadoc"/>
         </publications>
       </ivy-module>
     </echoxml>
