@@ -80,6 +80,10 @@
                     classifier="javadoc"/>
           <artifact name="${artifact.name}" type="javadoc.asc" ext="jar.asc"
                     classifier="javadoc"/>
+          <artifact name="${artifact.name}" type="ivy" ext="xml"
+                    classifier="ivy"/>
+          <artifact name="${artifact.name}" type="ivy.asc" ext="xml.asc"
+                    classifier="ivy"/>
         </publications>
       </ivy-module>
     </echoxml>

@@ -470,6 +470,7 @@
     <mkdir dir="${upload.dir}"/>
     <copy file="${jarname}" todir="${upload.dir}"/>
     <copy file="${target.pom}" todir="${upload.dir}"/>
+    <copy file="${target.ivy.xml}" todir="${upload.dir}"/>
     <jar destfile="${upload.dir}/${artifact.stub}-sources.jar">
       <fileset dir="src/main"/>
       <metainf file="NOTICE"/>
@@ -495,6 +496,9 @@
     <uptodate property="javadoc.sig.ok"
               srcfile="${upload.dir}/${artifact.stub}-javadoc.jar"
               targetfile="${upload.dir}/${artifact.stub}-javadoc.jar.asc"/>
+    <uptodate property="ivy.sig.ok"
+              srcfile="${upload.dir}/${artifact.stub}-ivy.xml"
+              targetfile="${upload.dir}/${artifact.stub}-ivy.xml.asc"/>
     <fail message="Your OpenPGP signature of the artifacts is too old or missing">
       <condition>
         <not>
@@ -503,6 +507,7 @@
             <isset property="pom.sig.ok"/>
             <isset property="sources.sig.ok"/>
             <isset property="javadoc.sig.ok"/>
+            <isset property="ivy.sig.ok"/>
           </and>
         </not>
       </condition>
