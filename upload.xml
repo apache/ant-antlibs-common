@@ -34,7 +34,7 @@
     <ivy:retrieve/>
     <ivy:deliver/>
     <ivy:publish publishivy="false"
-                 artifactspattern="${build.javarepository}/[organisation]/[module]/[artifact]/[revision]/[artifact]-[revision].[ext]"
+                 artifactspattern="${build.javarepository}/[organisation]/[module]/[artifact]/[revision]/[artifact]-[revision](-[classifier]).[ext]"
                  resolver="nexus"/>
   </target>
 </project>
