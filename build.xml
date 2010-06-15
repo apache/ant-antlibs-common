@@ -489,12 +489,20 @@
     <uptodate property="pom.sig.ok"
               srcfile="${upload.dir}/${artifact.stub}.pom"
               targetfile="${upload.dir}/${artifact.stub}.pom.asc"/>
+    <uptodate property="sources.sig.ok"
+              srcfile="${upload.dir}/${artifact.stub}-sources.jar"
+              targetfile="${upload.dir}/${artifact.stub}-sources.jar.asc"/>
+    <uptodate property="javadoc.sig.ok"
+              srcfile="${upload.dir}/${artifact.stub}-javadoc.jar"
+              targetfile="${upload.dir}/${artifact.stub}-javadoc.jar.asc"/>
     <fail message="Your OpenPGP signature of the artifacts is too old or missing">
       <condition>
         <not>
           <and>
             <isset property="jar.sig.ok"/>
             <isset property="pom.sig.ok"/>
+            <isset property="sources.sig.ok"/>
+            <isset property="javadoc.sig.ok"/>
           </and>
         </not>
       </condition>
