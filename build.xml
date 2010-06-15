@@ -42,8 +42,8 @@
     <!-- javac properties -->
     <property name="javac.-source" value="1.2"/>
     <property name="javac.-target" value="1.2"/>
-  	<property name="javac.test-source" value="${javac.-source}"/>
-  	<property name="javac.test-target" value="${javac.-target}"/>
+    <property name="javac.test-source" value="${javac.-source}"/>
+    <property name="javac.test-target" value="${javac.-target}"/>
     <property name="javac.debug" value="on"/>
 
     <!--you really need a proper version in version.properties-->
