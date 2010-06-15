@@ -442,6 +442,11 @@
     <mkdir dir="${upload.dir}"/>
     <copy file="${jarname}" todir="${upload.dir}"/>
     <copy file="${target.pom}" todir="${upload.dir}"/>
+    <jar destfile="${upload.dir}/${artifact.stub}-sources.jar">
+      <fileset dir="src/main"/>
+      <metainf file="NOTICE"/>
+      <metainf file="${common.basedir}/LICENSE"/>
+    </jar>
   </target>
 
   <target name="check-sigs" depends="prepare-upload">
