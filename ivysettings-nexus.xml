@@ -24,6 +24,7 @@
     </url>
   </resolvers>
   <modules>
-   <module organisation="org.apache" resolver="nexus"/>
+    <module organisation="org.apache" name="ant" resolver="nexus"/>
   </modules>
+  <settings defaultResolver="public"/>
 </ivysettings>
