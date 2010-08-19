@@ -57,15 +57,15 @@
   <target name="make-ivy.xml" depends="ivy-init" unless="project.has-ivy.xml?">
     <echo message="Creating ivy.xml ${target.ivy.xml}" level="verbose"/>
     <echoxml file="${target.ivy.xml}">
-      <ivy-module version="1.3">
-        <info organization="${ivy.organization}"
-          module="ant"
-          revision="${artifact.version}"
-          publication="${publication.datetime}">
+      <ivy-module version="2.0">
+        <info organisation="${ivy.organization}"
+              module="ant"
+              revision="${artifact.version}"
+              publication="${publication.datetime}">
           <license name="Apache Software License 2.0"
-            url="http://www.apache.org/licenses/LICENSE-2.0"/>
-          <ivy-author name="Apache Ant Development Team"
-            url="http://ant.apache.org/"/>
+                   url="http://www.apache.org/licenses/LICENSE-2.0"/>
+          <ivyauthor name="Apache Ant Development Team"
+                     url="http://ant.apache.org/"/>
         </info>
         <publications xmlns:e="urn:ant.apache.org:ivy-extras">
           <artifact name="${artifact.name}" type="pom" ext="pom"/>
