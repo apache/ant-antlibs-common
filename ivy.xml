@@ -56,7 +56,7 @@
   -->
   <target name="make-ivy.xml" depends="ivy-init" unless="project.has-ivy.xml?">
     <echo message="Creating ivy.xml ${target.ivy.xml}" level="verbose"/>
-    <echoxml file="${target.ivy.xml}">
+    <echo file="${target.ivy.xml}"><![CDATA[
       <ivy-module version="2.0">
         <info organisation="${ivy.organization}"
               module="ant"
@@ -86,7 +86,7 @@
                     e:classifier="ivy"/>
         </publications>
       </ivy-module>
-    </echoxml>
+ ]]></echo>
   </target>
 
   <target name="ivy.xml" depends="copy-ivy.xml,make-ivy.xml">
