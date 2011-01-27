@@ -38,6 +38,23 @@
     <!--look for a template Ivy file -->
     <property name="project.ivy.xml" location="project-template.ivy.xml"/>
     <available property="project.has-ivy.xml?" file="${project.ivy.xml}"/>
+    <condition property="generate-default-ivy.xml?">
+      <and>
+        <not>
+          <isset property="project.has-ivy.xml?"/>
+        </not>
+        <not>
+          <uptodate targetfile="${target.ivy.xml}">
+            <srcresources>
+              <file file="${common.basedir}/build.xml"/>
+              <file file="${common.basedir}/ivy.xml"/>
+              <file file="version.properties"/>
+              <file file="${target.jar}"/>
+            </srcresources>
+          </uptodate>
+        </not>
+      </and>
+    </condition>
   </target>
 
 
@@ -54,7 +71,7 @@
   <!-- inline creation of a zero dependency ivy.xml.
     We don't even declare a dependency on ant!
   -->
-  <target name="make-ivy.xml" depends="ivy-init" unless="project.has-ivy.xml?">
+  <target name="make-ivy.xml" depends="ivy-init" if="generate-default-ivy.xml?">
     <echo message="Creating ivy.xml ${target.ivy.xml}" level="verbose"/>
     <echo file="${target.ivy.xml}"><![CDATA[
       <ivy-module version="2.0">

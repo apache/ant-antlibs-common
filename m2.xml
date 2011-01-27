@@ -35,6 +35,23 @@
     <!--look for a template pom -->
     <property name="project.pom" location="project-template.pom"/>
     <available property="project.haspom?" file="${project.pom}"/>
+    <condition property="generate-default-pom?">
+      <and>
+        <not>
+          <isset property="project.haspom?"/>
+        </not>
+        <not>
+          <uptodate targetfile="${target.pom}">
+            <srcresources>
+              <file file="${common.basedir}/build.xml"/>
+              <file file="${common.basedir}/m2.xml"/>
+              <file file="version.properties"/>
+              <file file="${target.jar}"/>
+            </srcresources>
+          </uptodate>
+        </not>
+      </and>
+    </condition>
   </target>
 
   
@@ -51,7 +68,7 @@
   <!-- inline creation of a zero dependency pom.
     We don't even declare a dependency on ant!
   -->
-  <target name="m2-make-pom" depends="m2-init" unless="project.haspom?">
+  <target name="m2-make-pom" depends="m2-init" if="generate-default-pom?">
     <echo message="Creating Pom ${target.pom}" level="verbose"/>
     <echoxml file="${target.pom}">
       <project>
