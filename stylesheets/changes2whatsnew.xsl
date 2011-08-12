@@ -54,12 +54,13 @@
 
   <xsl:template match="action" mode="li">
     <xsl:value-of select="text()"/>
-    <xsl:if test="not(@issue='')">
+    <xsl:if test="@issue and not(@issue='')">
       <xsl:text>
         BugZilla Issue </xsl:text><xsl:value-of select="@issue"/><xsl:text>
-
-</xsl:text>
+      </xsl:text>
     </xsl:if>
+    <xsl:text>
+</xsl:text>
   </xsl:template>
 
   <!-- dont copy the text and unmatched nodes as per default in xsl -->
