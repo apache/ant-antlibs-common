@@ -34,6 +34,7 @@
     <property name="build.classes" value="${build}/classes"/>
     <property name="build.testclasses" value="${build}/test-classes"/>
     <property name="build.lib" value="${build}/lib"/>
+    <property name="build.deps" value="${build}/deps"/>
     <property name="build.javarepository"
               value="${build}/java-repository"/>
     <property name="build.javadoc" value="${build}/javadoc"/>
@@ -515,4 +516,61 @@
   </target>
 
   <target name="upload" depends="check-sigs,perform-nexus-upload"/>
+
+  <!-- "fat" binary distributions with dependencies -->
+  <import file="${common.basedir}/fetch.xml"/>
+
+  <target name="fat-distribution"
+          description="creates a complete binary distribution with dependencies"
+          depends="distribution,fetch-dependencies">
+
+    <unzip src="${dist.base.binaries}/${dist.name}-bin.zip"
+           dest="."/>
+
+    <copy todir="${dist.name}">
+      <fileset dir="${build.deps}"/>
+    </copy>
+
+    <zip destfile="${dist.base.binaries}/${dist.name}-bin-withdeps.zip">
+      <zipfileset dir="${dist.name}/.." filemode="755">
+        <include name="${dist.name}/bin/*.pl"/>
+        <include name="${dist.name}/bin/*.py"/>
+      </zipfileset>
+      <fileset dir="${dist.name}/..">
+        <include name="${dist.name}/**"/>
+        <exclude name="${dist.name}/bin/*.pl"/>
+        <exclude name="${dist.name}/bin/*.py"/>
+      </fileset>
+    </zip>
+    <tar longfile="gnu"
+      destfile="${dist.base.binaries}/${dist.name}-bin-withdeps.tar">
+      <tarfileset dir="${dist.name}/.." mode="755" username="ant" group="ant">
+        <include name="${dist.name}/bin/*.pl"/>
+        <include name="${dist.name}/bin/*.py"/>
+      </tarfileset>
+      <tarfileset dir="${dist.name}/.." username="ant" group="ant">
+        <include name="${dist.name}/**"/>
+        <exclude name="${dist.name}/bin/*.pl"/>
+        <exclude name="${dist.name}/bin/*.py"/>
+      </tarfileset>
+    </tar>
+    <gzip destfile="${dist.base.binaries}/${dist.name}-bin-withdeps.tar.gz"
+      src="${dist.base.binaries}/${dist.name}-bin-withdeps.tar"/>
+    <bzip2 destfile="${dist.base.binaries}/${dist.name}-bin-withdeps.tar.bz2"
+      src="${dist.base.binaries}/${dist.name}-bin-withdeps.tar"/>
+    <delete file="${dist.base.binaries}/${dist.name}-bin-withdeps.tar"/>
+
+    <checksums>
+      <fileset dir="${dist.base.binaries}/">
+        <include name="**/*-withdeps*"/>
+        <exclude name="**/*.asc"/>
+        <exclude name="**/*.md5"/>
+        <exclude name="**/*.sha1"/>
+        <exclude name="**/*.sha512"/>
+      </fileset>
+    </checksums>
+
+    <delete dir="${dist.name}"/>
+  </target>
+
 </project>
