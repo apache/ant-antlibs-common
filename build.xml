@@ -67,6 +67,8 @@
     <!-- junit test properties -->
     <property name="junit.fork" value="true" />
     <property name="junit.forkmode" value="once" />
+    <!-- Default to the location in the Ant installation -->
+    <property name="ant-testutil.jar" value="${ant.home}/lib/ant-testutil.jar" />
   </target>
 
   <target name="setup" depends="setup-properties">
