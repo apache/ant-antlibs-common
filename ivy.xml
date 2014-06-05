@@ -17,7 +17,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<project name="ivy">
+<project name="ivy" xmlns:ivy="antlib:org.apache.ivy.ant">
   <description>Targets for ivy.xml creation/handling</description>
 
   <dirname property="common.basedir" file="${ant.file.ivy}"/>
@@ -111,5 +111,51 @@
       <file file="${target.ivy.xml}"/>
     </checksums>
   </target>
+ 
+
+  <!-- ========================================================== -->
+  <!-- Bootstraping Ivy as in http://ant.apache.org/ivy/history/latest-milestone/samples/build.xml -->
+  <!-- ========================================================== -->
+
+  
+  <target name="download-ivy" if="with.ivy" depends="setup-properties">
+    <mkdir dir="${ivy.jar.dir}"/>
+    <!-- download Ivy from web site so that it can be used even without any special installation -->
+    <echo message="installing ivy..."/>
+    <get src="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar" dest="${ivy.jar.file}" usetimestamp="true"/>
+  </target>
+  
+  <!-- ================================= 
+    target: install-ivy         
+    this target is not necessary if you put ivy.jar in your ant lib directory
+    if you already have ivy in your ant lib, you can simply remove this
+    target and the dependency the 'go' target has on it
+  ================================= -->
+  <target name="install-ivy" if="with.ivy" depends="download-ivy" description="--> install ivy">
+    <!-- try to load ivy here from local ivy dir, in case the user has not already dropped
+    it into ant's lib dir (note that the latter copy will always take precedence).
+    We will not fail as long as local lib dir exists (it may be empty) and
+    ivy is in at least one of ant's lib dir or the local lib dir. -->
+    <path id="ivy.lib.path">
+      <fileset dir="${ivy.jar.dir}" includes="*.jar"/>
+    </path>
+    <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
+  </target>
+  
+
+  <!-- ========================================================== -->
+  <!-- Standard Ivy targets   -->
+  <!-- ========================================================== -->
+
+  <target name="resolve" depends="install-ivy" if="with.ivy" unless="no.resolve">
+    <ivy:resolve file="ivy.xml"/>    
+    <ivy:retrieve conf="default" pattern="${lib.dir.compile}/[artifact].[ext]" sync="yes"/>
+    <ivy:retrieve conf="test" pattern="${lib.dir.test}/[artifact].[ext]" sync="yes"/>
+    <ivy:cachepath pathid="classpath.compile" conf="default"/>
+    <ivy:cachepath pathid="classpath.test" conf="default,test"/>
+  </target>
+
+    
 
 </project>
+ 

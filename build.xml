@@ -15,15 +15,21 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<project name="common">
+<project name="common" xmlns:ivy="antlib:org.apache.ivy.ant">
 
   <dirname property="common.basedir" file="${ant.file.common}"/>
   <import file="${common.basedir}/common-tasks.xml"/>
+  
+  <available property="with.ivy" file="ivy.xml"/>
 
   <target name="setup-properties">
+    <!-- load antlib specific configuration -->
     <property file="build.properties"/>
     <!--load in an optional file containing versions of things-->
     <property file="version.properties"/>
+    
+    <!-- load common configuration -->
+    <property file="${common.basedir}/build.properties"/>
     
     <!--load in a file containing versions of ant
       and other libraries-->
@@ -54,6 +60,10 @@
     <property name="artifact.stub" value="${artifact.name}-${artifact.version}"/>
     <property name="jarname" value="${build.lib}/${artifact.stub}.jar"/>
     <property name="target.jar" value="${jarname}"/>
+    
+    <tstamp>
+      <format property="artifact.publication.datetime" pattern="yyyyMMddHHmmss"/>
+    </tstamp>
 
     <!-- properties for distribution target -->
     <property name="dist.name"
@@ -90,7 +100,7 @@
   <target name="package" depends="checksum-target-jar"
        description="Package everything up"/>
 
-  <target name="compile" depends="setup">
+  <target name="compile" depends="setup,resolve">
     <javac 
       srcdir="src/main"
       destdir="${build.classes}"
@@ -98,6 +108,7 @@
       source="${javac.-source}"
       target="${javac.-target}"
       includeantruntime="true"
+      classpathref="classpath.compile"
       />
   </target>
 
@@ -163,7 +174,7 @@
     <fail unless="antunit-present?">The AntUnit Ant library is not present.</fail>
   </target>
 
-  <target name="compile-tests" depends="setup-for-junit-tests, antlib"
+  <target name="compile-tests" depends="setup-for-junit-tests, antlib, resolve"
     unless="skip-junit">
     <javac 
       srcdir="${src.junit}"
@@ -175,6 +186,7 @@
       <classpath>
         <pathelement location="${jarname}"/>
         <pathelement location="${ant-testutil.jar}"/>
+        <path refid="classpath.test"/>
       </classpath>
     </javac>
     <copy todir="${build.testclasses}">
@@ -182,7 +194,7 @@
     </copy>
   </target>
 
-  <target name="junit-test" depends="ready-to-test-with-junit"
+  <target name="junit-test" depends="ready-to-test-with-junit,resolve"
     unless="skip-junit">
     <mkdir dir="${junit.report.dir}"/>
     <junit
@@ -198,6 +210,7 @@
         <pathelement location="${jarname}"/>
         <pathelement location="${ant-testutil.jar}"/>
         <pathelement location="${build.testclasses}"/>
+        <path refid="classpath.test"/>
       </classpath>
 
       <batchtest todir="${junit.report.dir}">
@@ -209,7 +222,7 @@
     </junit>
   </target>
 
-  <target name="antunit-test" depends="ready-to-test-with-antunit"
+  <target name="antunit-test" depends="ready-to-test-with-antunit,resolve"
     unless="skip-antunit">
     <condition property="antunit.includes" value="${antunit.testcase}"
                else="**/test.xml,**/*-test.xml">
@@ -581,5 +594,5 @@
 
     <delete dir="${dist.name}"/>
   </target>
-
+  
 </project>
