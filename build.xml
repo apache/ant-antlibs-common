@@ -23,7 +23,7 @@
   <available property="with.ivy" file="ivy.xml"/>
 
   <target name="setup-properties">
-    <!-- load antlib specific configuration -->
+    <!-- load optional antlib specific configuration -->
     <property file="build.properties"/>
     <!--load in an optional file containing versions of things-->
     <property file="version.properties"/>
@@ -35,53 +35,13 @@
       and other libraries-->
     <property file="${ant.home}/lib/libraries.properties"/>
 
-    <!-- properties for build and test -->
-    <property name="build" value="build"/>
-    <property name="build.classes" value="${build}/classes"/>
-    <property name="build.testclasses" value="${build}/test-classes"/>
-    <property name="build.lib" value="${build}/lib"/>
-    <property name="build.deps" value="${build}/deps"/>
-    <property name="build.javarepository"
-              value="${build}/java-repository"/>
-    <property name="build.javadoc" value="${build}/javadoc"/>
-    <property name="src.junit" location="src/tests/junit"/>
-    <property name="src.antunit" location="src/tests/antunit"/>
-    
     <!-- javac properties -->
-    <property name="javac.-source" value="1.2"/>
-    <property name="javac.-target" value="1.2"/>
     <property name="javac.test-source" value="${javac.-source}"/>
     <property name="javac.test-target" value="${javac.-target}"/>
-    <property name="javac.debug" value="on"/>
 
-    <!--you really need a proper version in version.properties-->
-    <property name="artifact.version" value="0.1-SNAPSHOT"/>
-    <property name="artifact.name" value="ant-${ant.project.name}"/>
-    <property name="artifact.stub" value="${artifact.name}-${artifact.version}"/>
-    <property name="jarname" value="${build.lib}/${artifact.stub}.jar"/>
-    <property name="target.jar" value="${jarname}"/>
-    
     <tstamp>
       <format property="artifact.publication.datetime" pattern="yyyyMMddHHmmss"/>
     </tstamp>
-
-    <!-- properties for distribution target -->
-    <property name="dist.name"
-      value="apache-${artifact.name}-${artifact.version}"/>
-    <property name="dist.base" value="distribution"/>
-    <property name="dist.base.source" value="${dist.base}/source"/>
-    <property name="dist.base.binaries" value="${dist.base}/binaries"/>
-    <property name="bin.dist.dir" value="dist-bin"/>
-    <property name="src.dist.dir" value="dist-src"/>
-
-    <!-- junit test properties -->
-    <property name="junit.fork" value="true" />
-    <property name="junit.forkmode" value="once" />
-    <!-- Default to the location in the Ant installation -->
-    <property name="ant-testutil.jar" value="${ant.home}/lib/ant-testutil.jar" />
-    <property name="report.dir" value="${build}/reports" />
-    <property name="antunit.report.dir" value="${report.dir}/antunit" />
-    <property name="junit.report.dir" value="${report.dir}/junit" />
   </target>
 
   <target name="setup" depends="setup-properties">
@@ -278,6 +238,10 @@
              failonerror="true"
              verbose="false">
       <packageset dir="src/main"/>
+      <classpath>
+        <path refid="classpath.compile"/>
+        <fileset dir="${ant.home}/lib" includes="*.jar"/>
+      </classpath>
     </javadoc>
   </target>
 
