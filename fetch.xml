@@ -18,7 +18,6 @@
 <project name="fetch" xmlns:ivy="antlib:org.apache.ivy.ant">
 
   <target name="fetch-dependencies" depends="ivy.xml">
-    <ivy:configure file="${common.basedir}/ivysettings-nexus.xml"/>
     <ivy:resolve file="${target.ivy.xml}"/>
     <ivy:retrieve type="jar"
                   pattern="${build.deps}/[artifact]-[revision].[ext]"/>

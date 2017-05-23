@@ -28,15 +28,11 @@
   <!-- ========================================================== -->
   <target name="ivy-init"
           depends="setup">
-    <property name="ivy.organization" value="org/apache"/>
     <property name="target.ivy.xml"
               location="${build.lib}/${artifact.stub}-ivy.xml"/>
-    <tstamp>
-      <format property="publication.datetime" pattern="yyyyMMddHHmmss"/>
-    </tstamp> 
 
     <!--look for a template Ivy file -->
-    <property name="project.ivy.xml" location="project-template.ivy.xml"/>
+    <property name="project.ivy.xml" location="ivy.xml"/>
     <available property="project.has-ivy.xml?" file="${project.ivy.xml}"/>
     <condition property="generate-default-ivy.xml?">
       <and>
@@ -75,10 +71,10 @@
     <echo message="Creating ivy.xml ${target.ivy.xml}" level="verbose"/>
     <echo file="${target.ivy.xml}"><![CDATA[
       <ivy-module version="2.0">
-        <info organisation="${ivy.organization}"
-              module="ant"
+        <info organisation="Apache Ant"
+              module="${artifact.name}"
               revision="${artifact.version}"
-              publication="${publication.datetime}">
+              publication="${artifact.publication.datetime}">
           <license name="Apache Software License 2.0"
                    url="http://www.apache.org/licenses/LICENSE-2.0"/>
           <ivyauthor name="Apache Ant Development Team"
