@@ -29,12 +29,14 @@
           message="supply upload.user on the command line"/>
     <fail unless="upload.password"
           message="supply upload.password on the command line"/>
-    <ivy:configure file="${common.basedir}/ivysettings-nexus.xml"/>
-    <ivy:resolve file="${target.ivy.xml}"/>
-    <ivy:retrieve/>
-    <ivy:deliver/>
+    <ivy:configure file="${common.basedir}/ivysettings-nexus.xml"
+                   settingsId="upload"/>
+    <ivy:resolve file="${target.ivy.xml}" settingsRef="upload"/>
+    <ivy:retrieve settingsRef="upload"/>
+    <ivy:deliver settingsRef="upload"/>
     <ivy:publish publishivy="false"
                  artifactspattern="${build.javarepository}/[organisation]/[module]/[artifact]/[revision]/[artifact]-[revision](-[classifier]).[ext]"
-                 resolver="nexus"/>
+                 resolver="nexus"
+                 settingsRef="upload"/>
   </target>
 </project>
