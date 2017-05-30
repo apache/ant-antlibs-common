@@ -1,0 +1,229 @@
+Instructions for making an Antlib Release:
+
+Authors: Conor MacNeill
+         Stefan Bodewig
+         Magesh Umasankar
+         Antoine Levy-Lambert
+
+Note: this document is based on Ant core's ReleaseInstructions file
+      <http://svn.apache.org/repos/asf/ant/core/trunk/ReleaseInstructions>
+      and adapted while Stefan was preparing the 1.5 release of the
+      Compress Antlib
+
+1.  Propose a release plan for vote.  This should set out the timetable for
+    the release under ideal circumstances.
+
+2.  The Ant release instructions say you should create a branch at
+    the freeze date.  In the case of the Antlibs (and maybe in general) it
+    may be simpler and more convenient to delay the creation of a
+    branch until you want to start new development in trunk.
+
+3.  We don't want tags for failed votes to end up on our branches so
+    the release is first created from a detached head.
+
+    Checkout the HEAD of the master branch as a detached head:
+
+    $ git checkout master^0
+
+4.  Make sure that your directory tree is clean by running git status.
+    Some tests leave behind leftovers which end up in the source
+    distribution otherwise.
+
+5.  Create a file version.properties in the projects root dir or
+    edit it if it already exists.  Change the value of property
+    artefact.version to 1.0Beta1.
+
+    [[ TODO: Check if the documentation files also need to be updated to point
+    to the right areas of Ant's website. ]]
+
+6.  Before a build :
+
+    the artefact.version property in version.properties governs the naming of
+    the distribution files.
+
+    Update the following files for version number:
+
+            * docs/index.html
+            * version.properties (artefact.version property)
+
+        Commit your changes.
+
+7.  Ensure you have all the external libraries that the Antlib uses
+    available to your build.
+
+8.  Next build and run the tests.  Then build the distribution.  It is
+    important that this be a clean build.
+
+    $ ant clean antlib
+    $ ant test -lib DEPENDENCIES_OF_YOUR_LIBRARY -lib ANTUNIT \
+        -lib build/lib/YOUR_LIBRARY
+
+    To build the distribution run the distribution target or the
+    fat-distribution target if you intend to create a binary
+    distribution that also contains all dependencies.
+    To build the mvn artifacts run the prepare-upload target.
+
+9.  Create a tag, push all changes.
+
+    $ git tag -s -m "Tagging RC1 for version 1.5 of Compress Antlib" 1_5_RC1
+    $ git push --tags
+
+10. Sign the distribution files using the following simple script
+    #!/bin/sh
+    for i in `/usr/bin/find distribution \( -name "*.bz2" -o -name  "*.zip" -o -name "*.gz" \)`
+    do
+         echo "Signing " $i
+         gpg --use-agent --detach-sign --armor $i
+    done
+    for i in `/usr/bin/find build/java-repository -type f`
+    do
+         echo "Signing " $i
+         gpg --use-agent --detach-sign --armor $i
+    done
+
+    Before you do that, ensure that the key you use is inside the KEYS
+    file in Ant's svn repository - and that you perform an svn update on
+    the KEYS file in /www/www.apache.org/dist/ant/
+
+    Also make sure you have sent the key that you use to a public
+    keyserver.
+
+11. The distribution is now ready to go. Check in all your
+    distribution files to
+    https://dist.apache.org/repos/dist/release/ant/antlibs/ANTLIB
+
+    To upload mvn artifacts to the Nexus repository manager run
+
+    ant upload -Dupload.user=YOUR-ASF-ID -Dupload.password=SVN-PASSWORD
+
+    Before others can see the artifacts you've uploaded, you need to
+    close the staging repository that has just been created.
+    See http://www.apache.org/dev/publishing-maven-artifacts.html#close-stage
+
+    Nexus will create .md5 and .sha1 files for your .asc signatures
+    that can savely be deleted via
+    https://repository.apache.org/index.html#stagingRepositories
+    (log in using your ASF credentials).
+
+
+
+
+
+
+
+12. This step may become meaningful once you do a second release ;-)
+
+    Copy the file README.html from dist-bin to
+    https://dist.apache.org/repos/dist/dev/ant/antlibs/ANTLIB as
+    RELEASE-NOTES-x.y.z.html.
+
+13. Once this is uploaded and committed call for a release vote on
+    dev@ant.  The vote will only pass if at least three PMC members
+    have voted +1 and more +1s than -1s have been cast.  The vote will
+    run for a week.
+
+14. Once the vote has passed, push the release and RELEASE-NOTES files
+    into the release directory.
+
+    The files should go to
+    https://dist.apache.org/repos/dist/release/ant/antlibs/ANTLIB
+
+    You can (sparsely) check out https://dist.apache.org/repos/dist
+    and perform the "svn mv" operation there or build up a pretty long
+    svnmucc command line to move all files from dev to release with a
+    single commit.
+
+15. Address the available release tags in BugZilla. Create a new tag 1.0Beta1
+    and a 1.1Alpha. Assign all existing 1.0 alpha bugs to one of these release
+    labels. Note that such massive changes can be done at once by choosing the
+    link "Change several bugs at once" at the bottom of the bug list
+    displaying the 1.0alpha bugs.
+
+16. Once that is done, do a test download to make sure everything is OK. A
+    common problem may be:
+    * the file's mime type is not recognized and is interpreted as
+      text/plain.  Fix it by using some .htaccess magic (AddEncoding stuff)
+    * Your gz.asc files are not being displayed properly (RemoveEncoing stuff)
+
+    If it looks OK, announce it on dev@ant and user@ant. After a few
+    days pass and there are no major problems, a wider announcement is
+    made (ant website, main jakarta website, announce@apache.org,
+    etc).
+
+    Announce beta releases at freshmeat.net.
+
+17. As problems in the beta are discovered, there may be a need for
+    one or more subsequent betas. The release manager makes this
+    call. Each time, the versions are updated and the above process is
+    repeated. Try not to have too many betas.
+
+18. Try to advertise the need for testing of the betas as much as possible.
+    This would eliminate the need to release minor patch versions like
+    we had to do when releasing Ant 1.4.
+
+    To monitor the number of downloads, look at the access_log
+    file under /usr/local/apache2/logs
+
+19. When the final beta is considered OK, propose a vote on dev@ant to
+    officially adopt the latest beta as the new release. If it is passed,
+    (it usually does,) this would be labelled 1_0 and built in a similar
+    fashion to the above process.
+
+    Remember to edit the file changes.xml to contain the proper
+    release version and date.
+
+20. BUT
+
+    This time you'll have to do some house-keeping for the old release:
+
+    * remove the beta release files
+
+    Publish the Maven artifacts to the central repository: 
+
+    * Log in to
+      https://repository.apache.org/index.html#stagingRepositories
+      using your ASF credentials.
+
+    * select the staging repository holding your artifacts.
+
+    * Promote it
+      <http://www.apache.org/dev/publishing-maven-artifacts.html#promote>
+
+    (**)
+
+21. Clean up.
+
+    * remove the remaining files of the previous release from
+      https://dist.apache.org/repos/dist/release/ant/antlibs/ANTLIB
+      This includes the old release notes.
+
+22. If you've created a branch, now and perhaps during previous betas
+    any changes on the branch must be merged back into the tree.
+
+23. At this point in time, the release is done and announcements are made.
+    PGP-sign your announcement posts.
+
+    [[TODO: Identify the mailing lists where announcements are to be made.
+      Also identify the webpages to which the announcements must go. ]]
+
+    Apache mailing lists that should get the announcements:
+    announce@apache.org, dev@ant and user@ant.
+
+    Announce release at freshmeat.net
+
+24. Add a new release tag to doap_*.rdf in the AntLib's trunk.
+
+25. You can now reacquaint yourself with your family and friends.
+
+(**) Mirrors : the srcdownload.html and bindownload.html each list a number of
+     mirrors. For ant 1.6.0 the mirrors picked up the new version in 8 hours
+     or less, the release having been done at midnight on Dec 18th, the
+     mirrors had it on Dec 19th at 8 am. The srcdownload/bindownload pages both
+     contain a note advising users to be patient immediately after the release.
+
+Related Information
+
+http://www.apache.org/dev/release-publishing.html
+http://jakarta.apache.org/commons/releases/
+http://wiki.apache.org/jakarta-commons/SigningReleases
+
