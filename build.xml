@@ -453,7 +453,7 @@
 
   <target name="prepare-upload" depends="bin-dist">
     <property name="upload.dir"
-              value="${build.javarepository}/org/apache/ant/${artifact.name}/${artifact.version}"/>
+              value="${build.javarepository}/org.apache.ant/${artifact.name}/${artifact.version}"/>
     <mkdir dir="${upload.dir}"/>
     <copy file="${jarname}" todir="${upload.dir}"/>
     <copy file="${target.pom}" todir="${upload.dir}"/>
