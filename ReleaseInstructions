@@ -46,6 +46,8 @@ Note: this document is based on Ant core's ReleaseInstructions file
             * docs/index.html
             * version.properties (artefact.version property)
 
+    Fix the release date inside changes.xml.
+
         Commit your changes.
 
 7.  Ensure you have all the external libraries that the Antlib uses
