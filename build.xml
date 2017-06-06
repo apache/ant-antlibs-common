@@ -271,6 +271,8 @@
         <include name="contributors.xml"/>
         <include name="build.xml"/>
         <include name="version.properties"/>
+        <include name="build.properties"/>
+        <include name="ivy.xml"/>
       </fileset>
       <fileset dir="common">
         <include name="LICENSE"/>
