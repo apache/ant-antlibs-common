@@ -22,6 +22,7 @@
   <!-- where to upload the artifacts -->
   <property name="upload.url"
             value="https://repository.apache.org/service/local/staging/deploy/maven2"/>
+  <property name="ivy.distrib.dir" value="${dist.base}"/>
 
   <target name="perform-nexus-upload"
           description="really requires the prepare-upload target to be run first">
