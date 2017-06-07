@@ -273,6 +273,7 @@
         <include name="version.properties"/>
         <include name="build.properties"/>
         <include name="ivy.xml"/>
+        <include name="project-template.pom"/>
       </fileset>
       <fileset dir="common">
         <include name="LICENSE"/>
