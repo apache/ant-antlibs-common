@@ -94,6 +94,10 @@ Note: this document is based on Ant core's ReleaseInstructions file
     distribution files to
     https://dist.apache.org/repos/dist/release/ant/antlibs/ANTLIB
 
+    Copy the file README.html from dist-bin to
+    https://dist.apache.org/repos/dist/dev/ant/antlibs/ANTLIB as
+    RELEASE-NOTES-x.y.z.html.
+
     To upload mvn artifacts to the Nexus repository manager run
 
     ant upload -Dupload.user=YOUR-ASF-ID -Dupload.password=SVN-PASSWORD
@@ -107,22 +111,22 @@ Note: this document is based on Ant core's ReleaseInstructions file
     https://repository.apache.org/index.html#stagingRepositories
     (log in using your ASF credentials).
 
+12. Once this is committed send a release vote email on dev@ant.
+    The email will typically mention :
+       - the git tag for the release including commit hash,
+       - the location of the tarballs, including revision number in
+         dist.apache.org repository
+       - the URL for the maven artifacts
+       - pointers to the KEYS file containing the key used to sign the artifacts
+
+    The vote will only pass if at least three PMC members have voted +1
+    and more +1s than -1s have been cast.  The vote will run for 3 days.
 
 
 
 
 
 
-12. This step may become meaningful once you do a second release ;-)
-
-    Copy the file README.html from dist-bin to
-    https://dist.apache.org/repos/dist/dev/ant/antlibs/ANTLIB as
-    RELEASE-NOTES-x.y.z.html.
-
-13. Once this is uploaded and committed call for a release vote on
-    dev@ant.  The vote will only pass if at least three PMC members
-    have voted +1 and more +1s than -1s have been cast.  The vote will
-    run for a week.
 
 14. Once the vote has passed, push the release and RELEASE-NOTES files
     into the release directory.
