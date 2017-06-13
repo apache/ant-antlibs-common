@@ -123,12 +123,7 @@ Note: this document is based on Ant core's ReleaseInstructions file
     and more +1s than -1s have been cast.  The vote will run for 3 days.
 
 
-
-
-
-
-
-14. Once the vote has passed, push the release and RELEASE-NOTES files
+13. Once the vote has passed, push the release and RELEASE-NOTES files
     into the release directory.
 
     The files should go to
@@ -139,93 +134,71 @@ Note: this document is based on Ant core's ReleaseInstructions file
     svnmucc command line to move all files from dev to release with a
     single commit.
 
-15. Address the available release tags in BugZilla. Create a new tag 1.0Beta1
-    and a 1.1Alpha. Assign all existing 1.0 alpha bugs to one of these release
-    labels. Note that such massive changes can be done at once by choosing the
-    link "Change several bugs at once" at the bottom of the bug list
-    displaying the 1.0alpha bugs.
+    Tag the last RC created with the final tag
 
-16. Once that is done, do a test download to make sure everything is OK. A
-    common problem may be:
-    * the file's mime type is not recognized and is interpreted as
-      text/plain.  Fix it by using some .htaccess magic (AddEncoding stuff)
-    * Your gz.asc files are not being displayed properly (RemoveEncoing stuff)
+    $ git tag -s -m "Tagging version 1.5 of Compress Antlib" rel/1.5 HASH_OF_LAST_RC
+    $ git push --tags
 
-    If it looks OK, announce it on dev@ant and user@ant. After a few
-    days pass and there are no major problems, a wider announcement is
-    made (ant website, main jakarta website, announce@apache.org,
-    etc).
+    release the maven artifacts using the web interface of nexus under
+    https://repository.apache.org
+      - login using your Apache credentials
+      - in the left pane, below "build promotion", click on the
+        "Stagings Repositories" links
+      - expand org.apache.ant
+      - select the checkbox next to the upload that you just did
+      - and click the button "Release".
+    About 4 hours later, the artifacts will be in the maven central repository.
 
-    Announce beta releases at freshmeat.net.
+14. Update the Apache Reporter System
 
-17. As problems in the beta are discovered, there may be a need for
-    one or more subsequent betas. The release manager makes this
-    call. Each time, the versions are updated and the above process is
-    repeated. Try not to have too many betas.
+    https://reporter.apache.org/addrelease.html?ant
 
-18. Try to advertise the need for testing of the betas as much as possible.
-    This would eliminate the need to release minor patch versions like
-    we had to do when releasing Ant 1.4.
+15. Address the available version tags in BugZilla. Create new
+    milestone 1.6 and version 1.5.
 
-    To monitor the number of downloads, look at the access_log
-    file under /usr/local/apache2/logs
+    Most likely they already exist because of Ant itself.
 
-19. When the final beta is considered OK, propose a vote on dev@ant to
-    officially adopt the latest beta as the new release. If it is passed,
-    (it usually does,) this would be labelled 1_0 and built in a similar
-    fashion to the above process.
+16. Add a new release tag to doap_*.rdf in Ant's site.
 
-    Remember to edit the file changes.xml to contain the proper
-    release version and date.
+17. checkout the master branch, merge the tag but don't push the
+    commit
 
-20. BUT
+    Update the following files for version number ([newversion]alpha):
 
-    This time you'll have to do some house-keeping for the old release:
+            * docs/index.html (if there is a version number)
+            * version.properties (artefact.version property)
+            * changes.xml (add new section)
 
-    * remove the beta release files
+18. wait a few hours for the mirrors to catch up
 
-    Publish the Maven artifacts to the central repository: 
+19. Update the ant.apache.org site :
 
-    * Log in to
-      https://repository.apache.org/index.html#stagingRepositories
-      using your ASF credentials.
+    The website is managed here: https://svn.apache.org/repos/asf/ant/site/ant/
 
-    * select the staging repository holding your artifacts.
+    Update the following files for version number:
 
-    * Promote it
-      <http://www.apache.org/dev/publishing-maven-artifacts.html#promote>
+    * source/antnews.xml (Announcement)
+    * source/index.xml (Announcement, latest release details, link to
+    manual under "Documentation")
+    * source/antlibs/proper.xml
+    * source/antlibs/srcdownload.xml
+    * source/antlibs/bindownload.xml
+    * source/antlib/ANTLIB/index.xml and other antlib specific pages
 
-    (**)
+    Generate the html files by invoking 'ant'
+    Commit the modified/generated files in the 'production' folder, it will go
+    live on ant.apache.org in a matter on seconds.
 
-21. Clean up.
-
-    * remove the remaining files of the previous release from
-      https://dist.apache.org/repos/dist/release/ant/antlibs/ANTLIB
-      This includes the old release notes.
-
-22. If you've created a branch, now and perhaps during previous betas
-    any changes on the branch must be merged back into the tree.
-
-23. At this point in time, the release is done and announcements are made.
+20. At this point in time, the release is done and announcements are made.
     PGP-sign your announcement posts.
-
-    [[TODO: Identify the mailing lists where announcements are to be made.
-      Also identify the webpages to which the announcements must go. ]]
 
     Apache mailing lists that should get the announcements:
     announce@apache.org, dev@ant and user@ant.
 
-    Announce release at freshmeat.net
+21. You can now reacquaint yourself with your family and friends.
 
-24. Add a new release tag to doap_*.rdf in the AntLib's trunk.
-
-25. You can now reacquaint yourself with your family and friends.
-
-(**) Mirrors : the srcdownload.html and bindownload.html each list a number of
-     mirrors. For ant 1.6.0 the mirrors picked up the new version in 8 hours
-     or less, the release having been done at midnight on Dec 18th, the
-     mirrors had it on Dec 19th at 8 am. The srcdownload/bindownload pages both
-     contain a note advising users to be patient immediately after the release.
+22. After a few days "svn rm" the older release artifacts and release
+    notes from https://dist.apache.org/repos/dist/release/ant/
 
 Related Information
 
