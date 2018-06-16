@@ -385,8 +385,6 @@
       <fileset dir="${dist.base.binaries}/">
         <include name="**/*"/>
         <exclude name="**/*.asc"/>
-        <exclude name="**/*.md5"/>
-        <exclude name="**/*.sha1"/>
         <exclude name="**/*.sha512"/>
       </fileset>
     </checksums>
@@ -417,8 +415,6 @@
       <fileset dir="${dist.base.source}/">
         <include name="**/*"/>
         <exclude name="**/*.asc"/>
-        <exclude name="**/*.md5"/>
-        <exclude name="**/*.sha1"/>
         <exclude name="**/*.sha512"/>
       </fileset>
     </checksums>
@@ -553,8 +549,6 @@
       <fileset dir="${dist.base.binaries}/">
         <include name="**/*-withdeps*"/>
         <exclude name="**/*.asc"/>
-        <exclude name="**/*.md5"/>
-        <exclude name="**/*.sha1"/>
         <exclude name="**/*.sha512"/>
       </fileset>
     </checksums>
