@@ -258,8 +258,11 @@
     description="--> creates a source distribution">
 
     <mkdir dir="${src.dist.dir}"/>
+    <defaultexcludes remove="**/.gitignore"/>
+    <defaultexcludes remove="**/.gitmodules"/>
     <copy todir="${src.dist.dir}">
       <fileset dir=".">
+        <include name=".gitattributes"/>
         <include name=".gitignore"/>
         <include name=".gitmodules"/>
         <include name="INSTALL"/>
@@ -283,6 +286,7 @@
       </fileset>
       <fileset file="${target.pom}"/>
     </copy>
+    <defaultexcludes default="true"/>
 
     <fixcrlf srcdir="${src.dist.dir}" eol="dos" includes="*.bat,*.cmd"/>
     <fixcrlf srcdir="${src.dist.dir}" eol="unix">
