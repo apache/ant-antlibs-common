@@ -258,6 +258,7 @@
     description="--> creates a source distribution">
 
     <mkdir dir="${src.dist.dir}"/>
+    <defaultexcludes remove="**/.gitattributes"/>
     <defaultexcludes remove="**/.gitignore"/>
     <defaultexcludes remove="**/.gitmodules"/>
     <copy todir="${src.dist.dir}">
@@ -401,6 +402,7 @@
       <param name="src.dist.dir" value="${dist.name}"/>
     </antcall>
 
+    <defaultexcludes remove="**/.gitattributes"/>
     <defaultexcludes remove="**/.gitignore"/>
     <defaultexcludes remove="**/.gitmodules"/>
     <zip destfile="${dist.base.source}/${dist.name}-src.zip">
