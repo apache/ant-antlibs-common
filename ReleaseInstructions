@@ -6,9 +6,8 @@ Authors: Conor MacNeill
          Antoine Levy-Lambert
 
 Note: this document is based on Ant core's ReleaseInstructions file
-      <http://svn.apache.org/repos/asf/ant/core/trunk/ReleaseInstructions>
-      and adapted while Stefan was preparing the 1.5 release of the
-      Compress Antlib
+      <https://git-wip-us.apache.org/repos/asf?p=ant.git;a=blob;f=ReleaseInstructions>
+      and adapted while Stefan was preparing the 1.4 release of AntUnit
 
 1.  Propose a release plan for vote.  This should set out the timetable for
     the release under ideal circumstances.
