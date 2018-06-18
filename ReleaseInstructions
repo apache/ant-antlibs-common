@@ -31,20 +31,20 @@ Note: this document is based on Ant core's ReleaseInstructions file
 
 5.  Create a file version.properties in the projects root dir or
     edit it if it already exists.  Change the value of property
-    artefact.version to 1.0Beta1.
+    artifact.version to 1.4.
 
     [[ TODO: Check if the documentation files also need to be updated to point
     to the right areas of Ant's website. ]]
 
 6.  Before a build :
 
-    the artefact.version property in version.properties governs the naming of
+    the artifact.version property in version.properties governs the naming of
     the distribution files.
 
     Update the following files for version number:
 
             * docs/index.html
-            * version.properties (artefact.version property)
+            * version.properties (artifact.version property)
 
     Fix the release date inside changes.xml.
 
