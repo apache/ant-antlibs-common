@@ -52,7 +52,7 @@
       <xsl:value-of select="text()"/>
       <xsl:if test="@issue and not(@issue='')">
         <a>
-          <xsl:attribute name="href">http://issues.apache.org/bugzilla/show_bug.cgi?id=<xsl:value-of select="@issue"/></xsl:attribute>
+          <xsl:attribute name="href">https://issues.apache.org/bugzilla/show_bug.cgi?id=<xsl:value-of select="@issue"/></xsl:attribute>
           <xsl:text>BugZilla Issue </xsl:text><xsl:value-of select="@issue"/><xsl:text></xsl:text>
         </a>
       </xsl:if>

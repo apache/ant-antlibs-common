@@ -78,7 +78,7 @@
           <license name="Apache Software License 2.0"
                    url="https://www.apache.org/licenses/LICENSE-2.0"/>
           <ivyauthor name="Apache Ant Development Team"
-                     url="http://ant.apache.org/"/>
+                     url="https://ant.apache.org/"/>
         </info>
         <publications xmlns:e="urn:ant.apache.org:ivy-extras">
           <artifact name="${artifact.name}" type="pom" ext="pom"/>
@@ -110,7 +110,7 @@
  
 
   <!-- ========================================================== -->
-  <!-- Bootstraping Ivy as in http://ant.apache.org/ivy/history/latest-milestone/samples/build.xml -->
+  <!-- Bootstraping Ivy as in https://ant.apache.org/ivy/history/latest-milestone/samples/build.xml -->
   <!-- ========================================================== -->
 
   
@@ -118,7 +118,7 @@
     <mkdir dir="${ivy.jar.dir}"/>
     <!-- download Ivy from web site so that it can be used even without any special installation -->
     <echo message="installing ivy..."/>
-    <get src="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar" dest="${ivy.jar.file}" usetimestamp="true"/>
+    <get src="https://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar" dest="${ivy.jar.file}" usetimestamp="true"/>
   </target>
   
   <!-- ================================= 
