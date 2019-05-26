@@ -103,7 +103,7 @@ Note: this document is based on Ant core's ReleaseInstructions file
 
     Before others can see the artifacts you've uploaded, you need to
     close the staging repository that has just been created.
-    See http://www.apache.org/dev/publishing-maven-artifacts.html#close-stage
+    See https://www.apache.org/dev/publishing-maven-artifacts.html#close-stage
 
     Nexus will create .md5 and .sha1 files for your .asc signatures
     that can savely be deleted via
