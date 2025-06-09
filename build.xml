@@ -236,6 +236,7 @@
              windowtitle="${artifact.name} API"
              doctitle="${artifact.name}"
              failonerror="true"
+             additionalparam="${javadoc.additionalparam}"
              verbose="false">
       <packageset dir="src/main"/>
       <classpath>
