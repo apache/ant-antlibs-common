@@ -113,13 +113,15 @@
 
   <target name="setup-for-junit-tests" depends="setup,determine-test-types"
     unless="skip-junit">
-    <available classname="junit.framework.TestCase" property="junit-present?"/>    
+    <available classname="junit.framework.TestCase"
+      property="junit-present?"
+      classpathref="classpath.test"/>
     <fail unless="junit-present?">The JUnit library is not present.</fail>
             
     <available classname="org.apache.tools.ant.BuildFileTest"
       property="testutil-present?"
       ignoresystemclasses="true"
-      classpath="${ant-testutil.jar}"/>
+      classpathref="classpath.test"/>
 
     <fail unless="testutil-present?">Expected to find ant-testutil.jar
     in ${ant-testutil.jar}, please set the property ant-testutil.jar
@@ -129,7 +131,8 @@
   <target name="setup-for-antunit-tests" depends="setup,determine-test-types"
     unless="skip-antunit">
     <available classname="org.apache.ant.antunit.AntUnit"
-      property="antunit-present?"/>
+      property="antunit-present?"
+      classpathref="classpath.test"/>
 
     <fail unless="antunit-present?">The AntUnit Ant library is not present.</fail>
   </target>
@@ -192,6 +195,10 @@
     <property name="antunit.excludes" value="" />
 
     <mkdir dir="${antunit.report.dir}" />
+    <typedef uri="antlib:org.apache.ant.antunit"
+      resource="org/apache/ant/antunit/antlib.xml"
+      classpathref="classpath.test"/>
+    <property name="antlib.location" location="${jarname}"/>
     <au:antunit xmlns:au="antlib:org.apache.ant.antunit"
       failOnError="false"
       errorProperty="antunit.tests.failed"
@@ -201,6 +208,12 @@
 
       <au:xmllistener todir="${antunit.report.dir}" />
       <au:plainlistener/>
+      <referenceset>
+        <reference refid="classpath.test"/>
+      </referenceset>
+      <propertyset>
+        <propertyref name="antlib.location"/>
+      </propertyset>
     </au:antunit>
   </target>
 
