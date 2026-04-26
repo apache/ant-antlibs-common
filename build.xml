@@ -55,12 +55,12 @@
   <target name="ready-to-compile" depends="setup"/>
   <target name="ready-to-test-with-junit" depends="compile-tests"/>
   <target name="ready-to-test-with-antunit" depends="setup-for-antunit-tests"/>
-  <target name="ready-to-package" depends="compile"/>
+  <target name="ready-to-package" depends="compile, check-for-NOTICE"/>
   <target name="ready-to-distribute" depends="antlib"/>
   <target name="package" depends="checksum-target-jar"
        description="Package everything up"/>
 
-  <target name="compile" depends="setup,resolve">
+  <target name="compile" depends="ready-to-compile,resolve">
     <javac 
       srcdir="src/main"
       destdir="${build.classes}"
@@ -80,7 +80,7 @@
     directory</fail>
   </target>
 
-  <target name="antlib" depends="compile, check-for-NOTICE">
+  <target name="antlib" depends="ready-to-package">
     <copy todir="${build.classes}">
       <fileset dir="src/main" includes="**/*.xml,**/*.properties"/>
     </copy>
