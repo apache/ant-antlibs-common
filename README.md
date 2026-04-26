@@ -55,7 +55,7 @@ under the License.
   `build.properties` file and add them.
 * create a more or less empty `contributors.xml` file to the top level
   directory of your antlib. Add yourself. The structure is
-  ```xml
+```xml
 <?xml version="1.0" encoding="utf-8"?>
 <!--
    Licensed to the Apache Software Foundation (ASF) under one or more
@@ -93,10 +93,10 @@ under the License.
     <last>YOUR LAST NAME</last>
   </name>
 </contributors>
-  ```
+```
 * create a more or less empty `changes.xml` file to the top level
   directory of your antlib. The structure is
-  ```xml
+```xml
 <?xml version="1.0" encoding="utf-8"?>
 <!--
    Licensed to the Apache Software Foundation (ASF) under one or more
@@ -139,11 +139,11 @@ under the License.
   <release version="0.1" date="unreleased">
   </release>
 </document>
-  ```
+```
 * add `version.properties` to the top level directory of your antlib
   which must at least contain a definition of
   `artifact.version`. Something like
-  ```
+```
 #  Licensed to the Apache Software Foundation (ASF) under one or more
 #  contributor license agreements.  See the NOTICE file distributed with
 #  this work for additional information regarding copyright ownership.
@@ -159,6 +159,6 @@ under the License.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 artifact.version=0.1alpha
-  ```
+```
 * if you want to use Ivy to manage your dependencies, add a file
   `ivy.xml` to the root directory of your antlib and set it up.
