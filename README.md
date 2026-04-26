@@ -20,8 +20,9 @@ build and Apache Ivy for dependency management.
   the top level directory of your new antlib and adapt its content
   (PRODUCT_NAME and copyright year.
 * add a minimal `build.xml` file to the top level directory of your
-  project. Something like
-  ```xml
+  project.
+  Something like
+```xml
 <?xml version="1.0"?>
 <!--
 Licensed to the Apache Software Foundation (ASF) under one
@@ -48,7 +49,7 @@ under the License.
 
   <import file="common/build.xml"/>
 </project>
-  ```
+```
 * if there are any properties you want to override (you most likely
   will want to change `javac.-source` and `javac.-target`) create a
   `build.properties` file and add them.
