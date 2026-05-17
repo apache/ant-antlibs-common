@@ -89,6 +89,7 @@
       <metainf file="NOTICE"/>
       <metainf file="${common.basedir}/LICENSE"/>
     </jar>
+    <property name="antlib.location" location="${jarname}"/>
   </target>
 
   <target name="checksum-target-jar"
@@ -128,16 +129,20 @@
     to the correct location.</fail>
   </target>
 
-  <target name="setup-for-antunit-tests" depends="setup,determine-test-types"
+  <target name="setup-for-antunit-tests" depends="setup,determine-test-types,resolve"
     unless="skip-antunit">
     <available classname="org.apache.ant.antunit.AntUnit"
       property="antunit-present?"
       classpathref="classpath.test"/>
 
     <fail unless="antunit-present?">The AntUnit Ant library is not present.</fail>
+
+    <typedef uri="antlib:org.apache.ant.antunit"
+      resource="org/apache/ant/antunit/antlib.xml"
+      classpathref="classpath.test"/>
   </target>
 
-  <target name="compile-tests" depends="setup-for-junit-tests, antlib, resolve"
+  <target name="compile-tests" depends="setup-for-junit-tests, antlib"
     unless="skip-junit">
     <javac 
       srcdir="${src.junit}"
@@ -195,10 +200,6 @@
     <property name="antunit.excludes" value="" />
 
     <mkdir dir="${antunit.report.dir}" />
-    <typedef uri="antlib:org.apache.ant.antunit"
-      resource="org/apache/ant/antunit/antlib.xml"
-      classpathref="classpath.test"/>
-    <property name="antlib.location" location="${jarname}"/>
     <au:antunit xmlns:au="antlib:org.apache.ant.antunit"
       failOnError="false"
       errorProperty="antunit.tests.failed"
