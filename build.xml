@@ -111,7 +111,7 @@
     </condition>
   </target>
 
-  <target name="setup-for-junit-tests" depends="setup,determine-test-types"
+  <target name="setup-for-junit-tests" depends="setup,determine-test-types,resolve"
     unless="skip-junit">
     <available classname="junit.framework.TestCase"
       property="junit-present?"
