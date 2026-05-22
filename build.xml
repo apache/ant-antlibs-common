@@ -507,6 +507,9 @@
     <copy file="${jarname}" todir="${upload.dir}"/>
     <copy file="${target.pom}" todir="${upload.dir}"/>
     <copy file="${target.ivy.xml}" todir="${upload.dir}"/>
+    <copy todir="${upload.dir}">
+      <resources refid="additional-bin-patterns"/>
+    </copy>
     <jar destfile="${upload.dir}/${artifact.stub}-sources.jar">
       <fileset dir="src/main"/>
       <metainf file="NOTICE"/>
