@@ -233,14 +233,14 @@
     <delete dir="${src.dist.dir}"/>
   </target>
 
-  <target name="javadoc_check">
+  <target name="javadoc_check" depends="setup-properties">
     <uptodate property="javadoc.notrequired"
-              targetfile="${build.javadoc}/package-list">
+              targetfile="${build.javadoc}/element-list">
       <srcfiles dir="src/main" includes="**/*.java,**/*.html"/>
     </uptodate>
   </target>
 
-  <target name="javadoc" depends="setup-properties, javadoc_check, resolve"
+  <target name="javadoc" depends="javadoc_check, resolve"
           description="--> creates the API documentation"
           unless="javadoc.notrequired">
     <mkdir dir="${build.javadoc}"/>
