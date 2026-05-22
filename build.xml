@@ -57,6 +57,8 @@
   <target name="ready-to-test-with-antunit" depends="setup-for-antunit-tests"/>
   <target name="ready-to-package" depends="compile, check-for-NOTICE"/>
   <target name="ready-to-distribute" depends="antlib"/>
+  <target name="ready-for-bin-dist" depends="checksum-target-jar,m2-pom,ivy.xml,javadoc"/>
+  <target name="ready-for-src-dist" depends="m2-pom,ivy.xml"/>
   <target name="package" depends="checksum-target-jar"
        description="Package everything up"/>
 
@@ -238,7 +240,7 @@
     </uptodate>
   </target>
 
-  <target name="javadoc" depends="setup-properties, javadoc_check"
+  <target name="javadoc" depends="setup-properties, javadoc_check, resolve"
           description="--> creates the API documentation"
           unless="javadoc.notrequired">
     <mkdir dir="${build.javadoc}"/>
@@ -275,7 +277,7 @@
   <import file="${common.basedir}/m2.xml"/>
   <import file="${common.basedir}/ivy.xml"/>
 
-  <target name="src-dist" depends="m2-pom,ivy.xml"
+  <target name="src-dist" depends="ready-for-src-dist"
     description="--> creates a source distribution">
 
     <mkdir dir="${src.dist.dir}"/>
@@ -324,7 +326,9 @@
     </antcall>
   </target>
 
-  <target name="bin-dist" depends="checksum-target-jar,m2-pom,ivy.xml,javadoc">
+  <resources id="additional-bin-patterns"/>
+
+  <target name="bin-dist" depends="ready-for-bin-dist">
     <mkdir dir="${bin.dist.dir}"/>
 
     <copy todir="${bin.dist.dir}">
@@ -342,6 +346,7 @@
       </fileset>
       <fileset file="${jarname}*"/>
       <fileset file="${target.pom}"/>
+      <resources refid="additional-bin-patterns"/>
     </copy>
     <copy todir="${bin.dist.dir}/javadoc">
       <fileset dir="${build.javadoc}"/>
@@ -356,6 +361,10 @@
       <param name="dest.dir" value="${bin.dist.dir}"/>
     </antcall>
   </target>
+
+  <target name="after-bin-dist"/>
+  <target name="after-src-dist"/>
+  <target name="after-fat-bin-dist"/>
 
   <target name="distribution" description="creates a complete distribution"
     depends="ready-to-distribute">
@@ -399,6 +408,10 @@
     <bzip2 destfile="${dist.base.binaries}/${dist.name}-bin.tar.bz2"
       src="${dist.base.binaries}/${dist.name}-bin.tar"/>
     <delete file="${dist.base.binaries}/${dist.name}-bin.tar"/>
+    <antcall target="after-bin-dist">
+      <param name="bin.dist.dir" value="${dist.name}"/>
+      <param name="dist.base" value="${dist.base.binaries}"/>
+    </antcall>
 
     <!--copy todir="${java-repository.dir}">
       <fileset dir="${dist.name}/lib">
@@ -443,6 +456,10 @@
     <bzip2 destfile="${dist.base.source}/${dist.name}-src.tar.bz2"
       src="${dist.base.source}/${dist.name}-src.tar"/>
     <delete file="${dist.base.source}/${dist.name}-src.tar"/>
+    <antcall target="after-src-dist">
+      <param name="src.dist.dir" value="${dist.name}"/>
+      <param name="dist.base" value="${dist.base.source}"/>
+    </antcall>
     <delete dir="${dist.name}"/>
     <checksums>
       <fileset dir="${dist.base.source}/">
@@ -577,6 +594,10 @@
     <bzip2 destfile="${dist.base.binaries}/${dist.name}-bin-withdeps.tar.bz2"
       src="${dist.base.binaries}/${dist.name}-bin-withdeps.tar"/>
     <delete file="${dist.base.binaries}/${dist.name}-bin-withdeps.tar"/>
+    <antcall target="after-fat-bin-dist">
+      <param name="bin.dist.dir" value="${dist.name}"/>
+      <param name="dist.base" value="${dist.base.binaries}"/>
+    </antcall>
 
     <checksums>
       <fileset dir="${dist.base.binaries}/">
