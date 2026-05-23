@@ -145,8 +145,8 @@
 
   <target name="resolve" depends="install-ivy,-no-resolve" if="with.ivy" unless="no.resolve">
     <ivy:resolve file="ivy.xml"/>    
-    <ivy:retrieve conf="default" pattern="${lib.dir.compile}/[artifact].[ext]" sync="yes"/>
-    <ivy:retrieve conf="test" pattern="${lib.dir.test}/[artifact].[ext]" sync="yes"/>
+    <ivy:retrieve conf="default" pattern="${lib.dir.compile}/[artifact]-[revision].[ext]" sync="yes"/>
+    <ivy:retrieve conf="test" pattern="${lib.dir.test}/[artifact]-[revision].[ext]" sync="yes"/>
     <ivy:cachepath pathid="classpath.compile" conf="default"/>
     <ivy:cachepath pathid="classpath.test" conf="default,test"/>
   </target>
