@@ -19,7 +19,7 @@
 
   <target name="fetch-dependencies" depends="ivy.xml">
     <ivy:resolve file="${target.ivy.xml}"/>
-    <ivy:retrieve type="jar"
+    <ivy:retrieve type="jar" conf="${fat-dist.fetch.config}"
                   pattern="${build.deps}/[artifact]-[revision].[ext]"/>
   </target>
 
