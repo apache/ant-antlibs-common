@@ -1,0 +1,250 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       https://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<project name="seed-antlib" default="seed" basedir="..">
+
+  <target name="collect-data">
+    <tstamp>
+      <format property="seed.year" pattern="yyyy"/>
+    </tstamp>
+    <input message="Name of Antlib"
+           addproperty="seed.antlib.name"/>
+    <input message="Version of Antlib"
+           addproperty="seed.antlib.version"
+           defaultvalue="0.1"/>
+    <input message="Copyright Year"
+           addproperty="seed.antlib.year"
+           defaultvalue="${seed.year}"/>
+    <input message="First name of initial author"
+           addproperty="seed.author.firstname"/>
+    <input message="Last name of initial author"
+           addproperty="seed.author.lastname"/>
+  </target>
+
+  <target name="seed" depends="collect-data">
+    <copy todir=".">
+      <fileset dir="common" defaultexcludes="false">
+        <include name="LICENSE"/>
+        <include name=".gitattributes"/>
+        <include name=".gitignore"/>
+        <include name=".asf.yaml"/>
+      </fileset>
+    </copy>
+    <mkdir dir="src/main"/>
+    <mkdir dir="src/test"/>
+    <mkdir dir="docs"/>
+    <copy todir="docs">
+      <fileset dir="common">
+        <include name="style.css"/>
+      </fileset>
+    </copy>
+    <copy tofile="NOTICE" file="common/NOTICE.template">
+      <filterset begintoken="[" endtoken="]">
+        <filter token="yyyy" value="${seed.antlib.year}"/>
+        <filter token="PRODUCT_NAME"
+                value="${seed.antlib.name} Ant Library"/>
+      </filterset>
+    </copy>
+    <echo file="build.xml"><![CDATA[<?xml version="1.0"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<project default="compile" name="${seed.antlib.name}">
+
+  <!-- easy way to override properties -->
+  <property file="build.properties"/>
+
+  <import file="common/build.xml"/>
+</project>
+]]></echo>
+    <echo file="contributors.xml"><![CDATA[<?xml version="1.0"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<!DOCTYPE contributors
+[
+<!ELEMENT name (first?, middle?, last)>
+<!ELEMENT contributors (introduction, name+)>
+<!ELEMENT first (#PCDATA)>
+<!ELEMENT introduction (#PCDATA)>
+<!ELEMENT middle (#PCDATA)>
+<!ELEMENT last (#PCDATA)>
+]
+>
+
+<contributors>
+  <introduction>
+  These are some of the many people who have helped with this Ant Library.
+  </introduction>
+  <name>
+    <first>${seed.author.firstname}</first>
+    <last>${seed.author.lastname}</last>
+  </name>
+</contributors>
+]]></echo>
+    <echo file="changes.xml"><![CDATA[<?xml version="1.0"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<!DOCTYPE document
+[
+<!ELEMENT document (properties?, release+)>
+<!ELEMENT properties (title)>
+<!ELEMENT title (#PCDATA)>
+<!ELEMENT release (action*)>
+<!ELEMENT action (#PCDATA)>
+<!ATTLIST release
+          version CDATA #REQUIRED
+          date CDATA #REQUIRED
+          description CDATA #IMPLIED>
+<!ATTLIST action
+          issue CDATA #IMPLIED
+          type (add|fix|remove|update) #REQUIRED
+          breaks-bwc (true|false) #IMPLIED>
+]
+>
+<document>
+  <properties>
+    <title>Apache ${seed.antlib.name} Ant Library</title>
+  </properties>
+
+  <release version="${seed.antlib.version}" date="unreleased">
+  </release>
+</document>
+]]></echo>
+    <echo file="version.properties">#  Licensed to the Apache Software Foundation (ASF) under one or more
+#  contributor license agreements.  See the NOTICE file distributed with
+#  this work for additional information regarding copyright ownership.
+#  The ASF licenses this file to You under the Apache License, Version 2.0
+#  (the "License"); you may not use this file except in compliance with
+#  the License.  You may obtain a copy of the License at
+#
+#      https://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+artifact.version=${seed.antlib.version}alpha
+</echo>
+    <echo file="ivy.xml"><![CDATA[<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       https://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+-->
+<ivy-module version="2.0">
+  <info organisation="org.apache.ant"
+        module="$${artifact.name}"
+        revision="$${artifact.version}"
+        publication="$${artifact.publication.datetime}">
+    <license name="Apache Software License 2.0"
+             url="https://www.apache.org/licenses/LICENSE-2.0"/>
+    <ivyauthor name="Apache Ant Development Team"
+               url="https://ant.apache.org/"/>
+    <description homepage="https://ant.apache.org/antlibs/${seed.antlib.name}/">
+      Apache ${seed.antlib.name} Ant Library
+    </description>
+  </info>
+  <configurations>
+    <conf name="default" description="full antlib with all dependencies"/>
+    <conf name="provided" description="Ant must be present at runtime"/>
+    <conf name="test" description="dependencies used for tests of the antlib" transitive="false" visibility="private"/>
+  </configurations>
+  <publications xmlns:e="urn:ant.apache.org:ivy-extras">
+    <artifact name="$${artifact.name}" type="pom" ext="pom"/>
+    <artifact name="$${artifact.name}" type="pom.asc" ext="pom.asc"/>
+    <artifact name="$${artifact.name}" type="jar" ext="jar"/>
+    <artifact name="$${artifact.name}" type="jar.asc" ext="jar.asc"/>
+    <artifact name="$${artifact.name}" type="source" ext="jar"
+              e:classifier="sources"/>
+    <artifact name="$${artifact.name}" type="source.asc" ext="jar.asc"
+              e:classifier="sources"/>
+    <artifact name="$${artifact.name}" type="javadoc" ext="jar"
+              e:classifier="javadoc"/>
+    <artifact name="$${artifact.name}" type="javadoc.asc" ext="jar.asc"
+              e:classifier="javadoc"/>
+    <artifact name="$${artifact.name}" type="ivy" ext="xml"
+              e:classifier="ivy"/>
+    <artifact name="$${artifact.name}" type="ivy.asc" ext="xml.asc"
+              e:classifier="ivy"/>
+  </publications>
+  <dependencies>
+    <dependency org="org.apache.ant" name="ant" rev="1.10.17" conf="provided->default"/>
+  </dependencies>
+</ivy-module>
+]]></echo>
+  </target>
+</project>
