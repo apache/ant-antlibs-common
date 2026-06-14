@@ -20,9 +20,15 @@ Note: this document is based on Ant core's ReleaseInstructions file
 3.  We don't want tags for failed votes to end up on our branches so
     the release is first created from a detached head.
 
-    Checkout the HEAD of the master branch as a detached head:
+    Checkout the HEAD of the main/master branch as a detached head:
 
     $ git checkout master^0
+
+    or
+
+    $ git checkout main^0
+
+    depending on the name of your default branch.
 
 4.  Make sure that your directory tree is clean by running git status.
     Some tests leave behind leftovers which end up in the source
@@ -71,7 +77,7 @@ Note: this document is based on Ant core's ReleaseInstructions file
 
 10. Sign the distribution files using the following simple script
     #!/bin/sh
-    for i in `/usr/bin/find distribution \( -name "*.bz2" -o -name  "*.zip" -o -name "*.gz" \)`
+    for i in `/usr/bin/find distribution \( -name "*.bz2" -o -name  "*.zip" -o -name "*.gz" -o -name "*.cyclonedx.json" -o -name "*.cyclonedx.xml" \)`
     do
          echo "Signing " $i
          gpg --use-agent --detach-sign --armor $i
