@@ -45,7 +45,7 @@
       </fileset>
     </copy>
     <mkdir dir="src/main"/>
-    <mkdir dir="src/test"/>
+    <mkdir dir="src/tests"/>
     <mkdir dir="docs"/>
     <copy todir="docs">
       <fileset dir="common">
