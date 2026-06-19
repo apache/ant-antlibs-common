@@ -206,6 +206,11 @@
       failOnError="false"
       errorProperty="antunit.tests.failed"
       >
+      <classpath>
+        <path refid="classpath.test"/>
+        <pathelement location="${build.classes}"/>
+        <pathelement location="${jarname}"/>
+      </classpath>
       <fileset dir="${src.antunit}" includes="${antunit.includes}"
                excludes="${antunit.excludes}" />
 
