@@ -141,7 +141,7 @@ Note: this document is based on Ant core's ReleaseInstructions file
 
     Tag the last RC created with the final tag
 
-    $ git tag -s -m "Tagging version 1.5 of Compress Antlib" rel/1.5 HASH_OF_LAST_RC
+    $ git tag -s -m "Tagging version 1.5 of Compress Antlib" rel/1.5 TAG_OF_LAST_RC^{}
     $ git push --tags
 
     release the maven artifacts using the web interface of nexus under
@@ -152,7 +152,7 @@ Note: this document is based on Ant core's ReleaseInstructions file
       - expand org.apache.ant
       - select the checkbox next to the upload that you just did
       - and click the button "Release".
-    About 4 hours later, the artifacts will be in the maven central repository.
+    About 2 hours later, the artifacts will be in the maven central repository.
 
 14. Update the Apache Reporter System
 
