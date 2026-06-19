@@ -613,4 +613,6 @@
     <delete dir="${dist.name}"/>
   </target>
   
+  <!-- SBOM generation-->
+  <import file="${common.basedir}/cyclonedx.xml"/>
 </project>
