@@ -163,7 +163,8 @@ Note: this document is based on Ant core's ReleaseInstructions file
 
     Most likely they already exist because of Ant itself.
 
-16. Add a new release tag to doap_*.rdf in Ant's site.
+16. Add a new release tag to doap_*.rdf in Ant's site (in
+    production/antlib/ANTLIB)
 
 17. checkout the master branch, merge the tag but don't push the
     commit
