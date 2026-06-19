@@ -77,7 +77,7 @@ Note: this document is based on Ant core's ReleaseInstructions file
 
 10. Sign the distribution files using the following simple script
     #!/bin/sh
-    for i in `/usr/bin/find distribution \( -name "*.bz2" -o -name  "*.zip" -o -name "*.gz" -o -name "*.cyclonedx.json" -o -name "*.cyclonedx.xml" \)`
+    for i in `/usr/bin/find distribution \( -name "*.bz2" -o -name  "*.zip" -o -name "*.gz" -o -name "*.cdx.json" -o -name "*.cdx.xml" \)`
     do
          echo "Signing " $i
          gpg --use-agent --detach-sign --armor $i

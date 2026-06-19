@@ -351,6 +351,9 @@
       </fileset>
       <fileset file="${jarname}*"/>
       <fileset file="${target.pom}"/>
+      <fileset dir="${build.lib}">
+        <include name="${artifact.stub}.cdx*"/>
+      </fileset>
       <resources refid="additional-bin-patterns"/>
     </copy>
     <copy todir="${bin.dist.dir}/javadoc">
