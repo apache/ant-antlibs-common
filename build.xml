@@ -516,6 +516,9 @@
     <copy file="${target.pom}" todir="${upload.dir}"/>
     <copy file="${target.ivy.xml}" todir="${upload.dir}"/>
     <copy todir="${upload.dir}">
+      <fileset dir="${build.lib}">
+        <include name="${artifact.stub}.cdx*"/>
+      </fileset>
       <resources refid="additional-bin-patterns"/>
     </copy>
     <jar destfile="${upload.dir}/${artifact.stub}-sources.jar">
