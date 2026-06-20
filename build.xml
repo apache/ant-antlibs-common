@@ -622,5 +622,5 @@
   </target>
   
   <!-- SBOM generation-->
-  <import file="${common.basedir}/cyclonedx.xml"/>
+  <import file="${common.basedir}/cyclonedx-common.xml"/>
 </project>
