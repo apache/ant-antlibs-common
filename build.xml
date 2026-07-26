@@ -42,6 +42,10 @@
     <tstamp>
       <format property="artifact.publication.datetime" pattern="yyyyMMddHHmmss"/>
     </tstamp>
+
+    <condition property="jdk9+">
+      <javaversion atleast="9"/>
+    </condition>
   </target>
 
   <target name="setup" depends="setup-properties">

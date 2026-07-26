@@ -22,7 +22,24 @@ under the License.
   <!-- version of CycloneDX Antlib to use -->
   <property name="cyclconedx.antlib.version" value="0.1"/>
 
-  <target name="fetch-cyclonedx" depends="resolve" if="with.ivy">
+  <target name="-check-cyclonedx" depends="setup-properties">
+    <condition property="can.use.cyclonedx">
+      <and>
+        <isset property="with.ivy"/>
+        <isset property="jdk9+"/>
+      </and>
+    </condition>
+    <condition property="add.ant.core.component">
+      <and>
+        <isset property="can.use.cyclonedx"/>
+        <isset property="ant.core.version"/>
+      </and>
+    </condition>
+  </target>
+
+  <target name="fetch-cyclonedx"
+          depends="-check-cyclonedx,resolve"
+          if="can.use.cyclonedx">
     <ivy:cachepath organisation="org.apache.ant"
                    module="ant-cyclonedx"
                    revision="${cyclconedx.antlib.version}"
@@ -37,6 +54,7 @@ under the License.
 
   <target name="define-common-cyclonedx-references"
           depends="fetch-cyclonedx"
+          if="can.use.cyclonedx"
           xmlns:cdx="antlib:org.apache.ant.cyclonedx">
     <!-- common definitions for SBOMs -->
     <cdx:organization
@@ -104,7 +122,7 @@ under the License.
   </target>
 
   <target name="define-core-ant-components"
-          if="ant.core.version"
+          if="add.ant.core.component"
           xmlns:cdx="antlib:org.apache.ant.cyclonedx"
           depends="define-common-cyclonedx-references">
     <cdx:component
