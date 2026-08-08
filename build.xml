@@ -144,8 +144,9 @@
     <fail unless="antunit-present?">The AntUnit Ant library is not present.</fail>
 
     <typedef uri="antlib:org.apache.ant.antunit"
-      resource="org/apache/ant/antunit/antlib.xml"
-      classpathref="classpath.test"/>
+             resource="org/apache/ant/antunit/antlib.xml"
+             classpathref="classpath.test"
+             loaderRef="antlib.classloader.antunit"/>
   </target>
 
   <target name="compile-tests" depends="setup-for-junit-tests, antlib"

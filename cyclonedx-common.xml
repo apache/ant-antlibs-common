@@ -49,7 +49,8 @@ under the License.
                    log="download-only"/>
     <typedef uri="antlib:org.apache.ant.cyclonedx"
              resource="org/apache/ant/cyclonedx/antlib.xml"
-             classpathref="cyclonedx.classpath"/>
+             classpathref="cyclonedx.classpath"
+             loaderRef="antlib.classloader.cyclonedx"/>
   </target>
 
   <target name="define-common-cyclonedx-references"
