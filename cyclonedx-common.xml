@@ -73,9 +73,6 @@ under the License.
           type="LICENSE"
           url="https://www.apache.org/licenses/LICENSE-2.0.txt"/>
       <externalReference
-          type="MAILING_LIST"
-          url="https://ant.apache.org/mail.html"/>
-      <externalReference
           type="SECURITY_CONTACT"
           url="https://www.apache.org/security/"/>
       <externalReference
@@ -84,6 +81,9 @@ under the License.
     </cdx:externalreferenceset>
     <!-- external references common to all antlibs -->
     <cdx:externalreferenceset id="antlibs-common-ext-refs">
+      <externalReference
+          type="MAILING_LIST"
+          url="https://ant.apache.org/mail.html"/>
       <externalReference
           type="WEBSITE"
           url="https://ant.apache.org/antlibs/${ant.project.name}/"/>
@@ -95,6 +95,9 @@ under the License.
           url="https://ant.apache.org/antlibs/srcdownload.cgi"/>
     </cdx:externalreferenceset>
     <cdx:externalreferenceset id="ant-ext-refs">
+      <externalReference
+          type="MAILING_LIST"
+          url="https://ant.apache.org/mail.html"/>
       <externalReference
           type="VCS"
           url="https://gitbox.apache.org/repos/asf/ant.git"/>
