@@ -66,6 +66,10 @@
   <target name="package" depends="checksum-target-jar"
        description="Package everything up"/>
 
+  <!-- extra classpath things like "provided" dependencies -->
+  <path id="classpath.compile.extra"/>
+  <path id="classpath.test.extra"/>
+
   <target name="compile" depends="ready-to-compile,resolve">
     <javac 
       srcdir="src/main"
@@ -73,9 +77,10 @@
       debug="${javac.debug}"
       source="${javac.-source}"
       target="${javac.-target}"
-      includeantruntime="true"
-      classpathref="classpath.compile"
-      />
+      includeantruntime="true">
+      <classpath refid="classpath.compile.extra"/>
+      <classpath refid="classpath.compile"/>
+    </javac>
   </target>
 
   <target name="check-for-NOTICE">
@@ -121,14 +126,22 @@
   <target name="setup-for-junit-tests" depends="setup,determine-test-types,resolve"
     unless="skip-junit">
     <available classname="junit.framework.TestCase"
-      property="junit-present?"
-      classpathref="classpath.test"/>
+               property="junit-present?">
+      <classpath>
+        <path refid="classpath.test"/>
+        <path refid="classpath.test.extra"/>
+      </classpath>
+    </available>
     <fail unless="junit-present?">The JUnit library is not present.</fail>
             
     <available classname="org.apache.tools.ant.BuildFileTest"
       property="testutil-present?"
-      ignoresystemclasses="true"
-      classpathref="classpath.test"/>
+      ignoresystemclasses="true">
+      <classpath>
+        <path refid="classpath.test"/>
+        <path refid="classpath.test.extra"/>
+      </classpath>
+    </available>
 
     <fail unless="testutil-present?">Expected to find ant-testutil.jar
     in ${ant-testutil.jar}, please set the property ant-testutil.jar
@@ -138,15 +151,23 @@
   <target name="setup-for-antunit-tests" depends="setup,determine-test-types,resolve"
     unless="skip-antunit">
     <available classname="org.apache.ant.antunit.AntUnit"
-      property="antunit-present?"
-      classpathref="classpath.test"/>
+      property="antunit-present?">
+      <classpath>
+        <path refid="classpath.test"/>
+        <path refid="classpath.test.extra"/>
+      </classpath>
+    </available>
 
     <fail unless="antunit-present?">The AntUnit Ant library is not present.</fail>
 
     <typedef uri="antlib:org.apache.ant.antunit"
              resource="org/apache/ant/antunit/antlib.xml"
-             classpathref="classpath.test"
-             loaderRef="antlib.classloader.antunit"/>
+             loaderRef="antlib.classloader.antunit">
+      <classpath>
+        <path refid="classpath.test"/>
+        <path refid="classpath.test.extra"/>
+      </classpath>
+    </typedef>
   </target>
 
   <target name="compile-tests" depends="setup-for-junit-tests, antlib"
@@ -162,6 +183,7 @@
         <pathelement location="${jarname}"/>
         <pathelement location="${ant-testutil.jar}"/>
         <path refid="classpath.test"/>
+        <path refid="classpath.test.extra"/>
       </classpath>
     </javac>
     <copy todir="${build.testclasses}">
@@ -186,6 +208,7 @@
         <pathelement location="${ant-testutil.jar}"/>
         <pathelement location="${build.testclasses}"/>
         <path refid="classpath.test"/>
+        <path refid="classpath.test.extra"/>
       </classpath>
 
       <batchtest todir="${junit.report.dir}">
@@ -213,6 +236,7 @@
       >
       <classpath>
         <path refid="classpath.test"/>
+        <path refid="classpath.test.extra"/>
         <pathelement location="${build.classes}"/>
         <pathelement location="${jarname}"/>
       </classpath>
@@ -223,6 +247,7 @@
       <au:plainlistener/>
       <referenceset>
         <reference refid="classpath.test"/>
+        <reference refid="classpath.test.extra"/>
       </referenceset>
       <propertyset>
         <propertyref name="antlib.location"/>
@@ -243,7 +268,7 @@
     <delete dir="${src.dist.dir}"/>
   </target>
 
-  <target name="javadoc_check" depends="setup-properties">
+  <target name="javadoc_check" depends="setup-properties,ready-to-compile">
     <uptodate property="javadoc.notrequired"
               targetfile="${build.javadoc}/element-list">
       <srcfiles dir="src/main" includes="**/*.java,**/*.html"/>
@@ -267,6 +292,7 @@
       <packageset dir="src/main"/>
       <classpath>
         <path refid="classpath.compile"/>
+        <path refid="classpath.compile.extra"/>
         <fileset dir="${ant.home}/lib" includes="*.jar"/>
       </classpath>
       <tag name="todo" description="To do:" scope="all"/>
